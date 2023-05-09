@@ -11,13 +11,18 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.glfw.GLFW;
-import org.python.util.PythonInterpreter;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,7 +33,6 @@ public class ChatCoordsClient implements ClientModInitializer {
 		private static KeyBinding Keybinding1;
 		private static KeyBinding Keybinding2;
 		private boolean canSendCoords = false;
-		public static long lastSentTime = 0;
 		public static Vec3d prevPos = null;
 
 		public static String logFile() {
@@ -78,28 +82,33 @@ public class ChatCoordsClient implements ClientModInitializer {
 				}
 		}
 
-		public static void Math_reaction(String chatLog) {
+		public static void Math_reaction(String chatLog) throws ScriptException {
 				String patternString = "MATH » (.*) = ?";
 				Pattern pattern = Pattern.compile(patternString);
 				Matcher matcher = pattern.matcher(chatLog);
 				if (matcher.find()) {
 						// Our python interpreter for evaluate function
-						String result;
-						try (PythonInterpreter pythonInterpreter = new PythonInterpreter()) {
-								String toType = matcher.group(1);
-								result = String.valueOf(pythonInterpreter.eval(toType));
+						String expression = matcher.group(1);
+						ScriptEngineManager manager = new ScriptEngineManager();
+						ScriptEngine engine = manager.getEngineByName("python");
+						if (engine == null) {
+								throw new RuntimeException("Python engine not found");
 						}
 
+						Object result = engine.eval(expression);
+						String res = result.toString();
+
 						// Selects the desired string and copies it for us in the clipboard
-						StringSelection selection = new StringSelection(result);
+						StringSelection selection = new StringSelection(res);
 						Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 						clipboard.setContents(selection, null);
 
-						String guide = result + " automatically copied by Ni9Logic for you <3";
+						String guide = res + " automatically copied by Ni9Logic for you <3";
 
-						assert MinecraftClient.getInstance().player != null;
-						MinecraftClient.getInstance().player.sendMessage(Text.of(guide)
-										.copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))));
+						if (MinecraftClient.getInstance().player != null) {
+								MinecraftClient.getInstance().player.sendMessage(Text.of(guide)
+												.copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))));
+						}
 
 						clearChatLog();
 				}
@@ -107,6 +116,7 @@ public class ChatCoordsClient implements ClientModInitializer {
 		}
 
 		public static void is_Teleported() throws AWTException, InterruptedException {
+				// We are checking this because after exiting it's so fast that it still manages to call this function and the game crashes right there
 				if (MinecraftClient.getInstance().player == null) {
 						return;
 				}
@@ -140,7 +150,7 @@ public class ChatCoordsClient implements ClientModInitializer {
 				// Basically when the client turns on
 				System.setProperty("java.awt.headless", "false");
 				Keybinding1 = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-								"Send Coordinates",
+								"Teleport Detector",
 								InputUtil.Type.KEYSYM,
 								GLFW.GLFW_KEY_N,
 								"Coords by LOGIC"
@@ -161,7 +171,11 @@ public class ChatCoordsClient implements ClientModInitializer {
 						// Gets REACTION >>
 						reaction(chatLog);
 						// Gets MATH >>
-						Math_reaction(chatLog);
+						try {
+								Math_reaction(chatLog);
+						} catch (ScriptException e) {
+								throw new RuntimeException(e);
+						}
 
 						// If N is pressed
 						if (Keybinding1.wasPressed()) {

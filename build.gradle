@@ -21,6 +21,7 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	implementation 'org.python:jython-standalone:2.7.2'
+	implementation 'net.objecthunter:exp4j:0.4.8'
 }
 
 processResources {
