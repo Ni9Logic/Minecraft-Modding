@@ -148,6 +148,7 @@ public class ChatCoordsClient implements ClientModInitializer {
 
 		@Override
 		public void onInitializeClient() {
+
 				// Basically when the client turns on
 				System.setProperty("java.awt.headless", "false");
 				Keybinding1 = KeyBindingHelper.registerKeyBinding(new KeyBinding(
@@ -217,5 +218,4 @@ public class ChatCoordsClient implements ClientModInitializer {
 				});
 
 		}
-
 }
