@@ -12,9 +12,6 @@ import net.minecraft.text.TextColor;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.glfw.GLFW;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -28,7 +25,7 @@ import java.util.regex.Pattern;
 
 public class ChatCoordsClient implements ClientModInitializer {
 
-		public static final String LOG_PATH = "C:\\Users\\Rakhman Gul\\Desktop\\Chat-Coords-main\\run\\logs\\latest.log";
+		public static final String LOG_PATH = "C:\\Users\\Rakhman Gul\\AppData\\Roaming\\.minecraft\\logs\\latest.log";
 
 		private static KeyBinding Keybinding1;
 		private static KeyBinding Keybinding2;
@@ -82,38 +79,38 @@ public class ChatCoordsClient implements ClientModInitializer {
 				}
 		}
 
-		public static void Math_reaction(String chatLog) throws ScriptException {
-				String patternString = "MATH » (.*) = ?";
-				Pattern pattern = Pattern.compile(patternString);
-				Matcher matcher = pattern.matcher(chatLog);
-				if (matcher.find()) {
-						// Our python interpreter for evaluate function
-						String expression = matcher.group(1);
-						ScriptEngineManager manager = new ScriptEngineManager();
-						ScriptEngine engine = manager.getEngineByName("python");
-						if (engine == null) {
-								throw new RuntimeException("Python engine not found");
-						}
-
-						Object result = engine.eval(expression);
-						String res = result.toString();
-
-						// Selects the desired string and copies it for us in the clipboard
-						StringSelection selection = new StringSelection(res);
-						Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-						clipboard.setContents(selection, null);
-
-						String guide = res + " automatically copied by Ni9Logic for you <3";
-
-						if (MinecraftClient.getInstance().player != null) {
-								MinecraftClient.getInstance().player.sendMessage(Text.of(guide)
-												.copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))));
-						}
-
-						clearChatLog();
-				}
-
-		}
+//		public static void Math_reaction(String chatLog) throws ScriptException {
+//				String patternString = "MATH » (.*) = ?";
+//				Pattern pattern = Pattern.compile(patternString);
+//				Matcher matcher = pattern.matcher(chatLog);
+//				if (matcher.find()) {
+//						// Our python interpreter for evaluate function
+//						String expression = matcher.group(1);
+//						ScriptEngineManager manager = new ScriptEngineManager();
+//						ScriptEngine engine = manager.getEngineByName("python");
+//						if (engine == null) {
+//								throw new RuntimeException("Python engine not found");
+//						}
+//
+//						Object result = engine.eval(expression);
+//						String res = result.toString();
+//
+//						// Selects the desired string and copies it for us in the clipboard
+//						StringSelection selection = new StringSelection(res);
+//						Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+//						clipboard.setContents(selection, null);
+//
+//						String guide = res + " automatically copied by Ni9Logic for you <3";
+//
+//						if (MinecraftClient.getInstance().player != null) {
+//								MinecraftClient.getInstance().player.sendMessage(Text.of(guide)
+//												.copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))));
+//						}
+//
+//						clearChatLog();
+//				}
+//
+//		}
 
 		public static void is_Teleported() throws AWTException, InterruptedException {
 				// We are checking this because after exiting it's so fast that it still manages to call this function and the game crashes right there
@@ -171,11 +168,11 @@ public class ChatCoordsClient implements ClientModInitializer {
 						// Gets REACTION >>
 						reaction(chatLog);
 						// Gets MATH >>
-						try {
-								Math_reaction(chatLog);
-						} catch (ScriptException e) {
-								throw new RuntimeException(e);
-						}
+//						try {
+//								Math_reaction(chatLog);
+//						} catch (ScriptException e) {
+//								throw new RuntimeException(e);
+//						}
 
 						// If N is pressed
 						if (Keybinding1.wasPressed()) {
