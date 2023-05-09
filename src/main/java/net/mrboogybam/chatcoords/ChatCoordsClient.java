@@ -142,6 +142,10 @@ public class ChatCoordsClient implements ClientModInitializer {
 				prevPos = curPos;
 		}
 
+		public static void is_HandItem() {
+				// TODO We have to check that if the current item in our hand is not a sword, we just need to leave or exit the game.
+		}
+
 		@Override
 		public void onInitializeClient() {
 				// Basically when the client turns on
