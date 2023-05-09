@@ -106,28 +106,6 @@ public class ChatCoordsClient implements ClientModInitializer {
 
 		}
 
-		public static void update_Coordinates(boolean to_update) {
-				if (to_update && System.currentTimeMillis() - lastSentTime >= 1000) {
-						MinecraftClient client = MinecraftClient.getInstance();
-						// Send the coordinates every 1 second
-						assert client.player != null;
-						double x = client.player.getX();
-						double y = client.player.getY();
-						double z = client.player.getZ();
-
-						String xRounded = String.format("%.0f", x);
-						String yRounded = String.format("%.0f", y);
-						String zRounded = String.format("%.0f", z);
-
-
-						String coords = "x" + xRounded + ", " + "y" + yRounded + ", " + "z" + zRounded;
-
-						MinecraftClient.getInstance().player.sendMessage(Text.of(coords));
-
-						lastSentTime = System.currentTimeMillis();
-				}
-		}
-
 		public static void is_Teleported() throws AWTException, InterruptedException {
 				if (MinecraftClient.getInstance().player == null) {
 						return;
