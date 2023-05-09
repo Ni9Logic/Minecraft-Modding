@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "ccoords",
+  "version": "${version}",
+
+  "name": "Chat Coords",
+  "description": "Sends your coordinates in the chat with the press of a button.",
+  "authors": [
+    "MrBoogyBam"
+  ],
+  "contact": {
+    "sources": "https://github.com/MrBoogyBam/Chat-Coords"
+  },
+
+  "license": "MIT",
+  "icon": "assets/ccoords/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.mrboogybam.chatcoords.ChatCoords"
+    ],
+    "client": [
+      "net.mrboogybam.chatcoords.ChatCoordsClient"
+    ]
+  },
+  "mixins": [
+    "ccoords.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.14.11",
+    "fabric": "*",
+    "minecraft": "~1.19.3",
+    "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
