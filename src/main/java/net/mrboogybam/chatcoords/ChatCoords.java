@@ -12,6 +12,7 @@ public class ChatCoords implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        System.setProperty("java.awt.headless", "false");
 
     }
 }

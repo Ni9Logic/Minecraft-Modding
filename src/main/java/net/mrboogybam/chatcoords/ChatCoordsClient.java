@@ -6,11 +6,12 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
+import net.minecraft.util.math.Vec3d;
 import org.lwjgl.glfw.GLFW;
+import org.python.util.PythonInterpreter;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -26,12 +27,9 @@ public class ChatCoordsClient implements ClientModInitializer {
 
 		private static KeyBinding Keybinding1;
 		private static KeyBinding Keybinding2;
-		private static KeyBinding Keybinding3;
 		private boolean canSendCoords = false;
-		private long lastSentTime = 0;
-		public String xRounded;
-		public String yRounded;
-		public String zRounded;
+		public static long lastSentTime = 0;
+		public static Vec3d prevPos = null;
 
 		public static String logFile() {
 				StringBuilder sb = new StringBuilder();
@@ -47,9 +45,8 @@ public class ChatCoordsClient implements ClientModInitializer {
 		}
 
 		public static void clearChatLog() {
-				PlayerEntity player = MinecraftClient.getInstance().player;
 				try {
-						FileWriter fw = new FileWriter(new File(LOG_PATH));
+						FileWriter fw = new FileWriter(LOG_PATH);
 						fw.write("");
 						fw.close();
 				} catch (IOException e) {
@@ -65,45 +62,104 @@ public class ChatCoordsClient implements ClientModInitializer {
 
 				if (matcher.find()) {
 						String toType = matcher.group(1);  // Gets the toType
-						try {
-								// Calling a robot to perform operations for us
-								Robot robot = new Robot();
-								robot.setAutoDelay(50);
-								// Selects the desired string and copies it for us in the clipboard
-								StringSelection selection = new StringSelection(toType);
-								Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-								clipboard.setContents(selection, null);
 
-								// Presses the chat key
-								robot.keyPress(KeyEvent.VK_T);
-								robot.keyRelease(KeyEvent.VK_T);
+						// Selects the desired string and copies it for us in the clipboard
+						StringSelection selection = new StringSelection(toType);
+						Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+						clipboard.setContents(selection, null);
 
+						String guide = toType + " automatically copied by Ni9Logic for you <3";
 
-								// Tries to paste
-								robot.keyPress(KeyEvent.VK_CONTROL);
-								robot.keyPress(KeyEvent.VK_V);
-								robot.keyRelease(KeyEvent.VK_V);
-								robot.keyRelease(KeyEvent.VK_CONTROL);
+						assert MinecraftClient.getInstance().player != null;
+						MinecraftClient.getInstance().player.sendMessage(Text.of(guide)
+										.copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))));
 
-								String guide = "Now Press Ctrl + V the msg ;)";
-								assert MinecraftClient.getInstance().player != null;
-								MinecraftClient.getInstance().player.sendMessage(Text.of(guide)
-												.copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))));
-
-								// Presses enter for us
-								robot.keyPress(KeyEvent.VK_ENTER);
-								robot.keyRelease(KeyEvent.VK_ENTER);
-
-						}
-						catch (Exception e) {
-								e.printStackTrace();
-						}
 						clearChatLog();
 				}
 		}
 
+		public static void Math_reaction(String chatLog) {
+				String patternString = "MATH » (.*) = ?";
+				Pattern pattern = Pattern.compile(patternString);
+				Matcher matcher = pattern.matcher(chatLog);
+				if (matcher.find()) {
+						// Our python interpreter for evaluate function
+						String result;
+						try (PythonInterpreter pythonInterpreter = new PythonInterpreter()) {
+								String toType = matcher.group(1);
+								result = String.valueOf(pythonInterpreter.eval(toType));
+						}
+
+						// Selects the desired string and copies it for us in the clipboard
+						StringSelection selection = new StringSelection(result);
+						Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+						clipboard.setContents(selection, null);
+
+						String guide = result + " automatically copied by Ni9Logic for you <3";
+
+						assert MinecraftClient.getInstance().player != null;
+						MinecraftClient.getInstance().player.sendMessage(Text.of(guide)
+										.copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))));
+
+						clearChatLog();
+				}
+
+		}
+
+		public static void update_Coordinates(boolean to_update) {
+				if (to_update && System.currentTimeMillis() - lastSentTime >= 1000) {
+						MinecraftClient client = MinecraftClient.getInstance();
+						// Send the coordinates every 1 second
+						assert client.player != null;
+						double x = client.player.getX();
+						double y = client.player.getY();
+						double z = client.player.getZ();
+
+						String xRounded = String.format("%.0f", x);
+						String yRounded = String.format("%.0f", y);
+						String zRounded = String.format("%.0f", z);
+
+
+						String coords = "x" + xRounded + ", " + "y" + yRounded + ", " + "z" + zRounded;
+
+						MinecraftClient.getInstance().player.sendMessage(Text.of(coords));
+
+						lastSentTime = System.currentTimeMillis();
+				}
+		}
+
+		public static void is_Teleported() throws AWTException, InterruptedException {
+				if (MinecraftClient.getInstance().player == null) {
+						return;
+				}
+				Vec3d curPos = MinecraftClient.getInstance().player.getPos();
+				if (prevPos != null && !prevPos.equals(curPos)) {
+						// Checking difference
+						double dx = curPos.getX() - prevPos.getX();
+						double dy = curPos.getY() - prevPos.getY();
+						double dz = curPos.getZ() - prevPos.getZ();
+						double dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+						if (dist > 0.1) {
+								Robot robot = new Robot();
+
+								robot.keyPress(KeyEvent.VK_ESCAPE);
+								robot.keyRelease(KeyEvent.VK_ESCAPE);
+
+								for (int i = 0; i < 8; i++) {
+										robot.keyPress(KeyEvent.VK_TAB);
+										robot.keyRelease(KeyEvent.VK_TAB);
+								}
+
+								robot.keyPress(KeyEvent.VK_ENTER);
+								robot.keyRelease(KeyEvent.VK_ENTER);
+						}
+				}
+				prevPos = curPos;
+		}
+
 		@Override
 		public void onInitializeClient() {
+				// Basically when the client turns on
 				System.setProperty("java.awt.headless", "false");
 				Keybinding1 = KeyBindingHelper.registerKeyBinding(new KeyBinding(
 								"Send Coordinates",
@@ -112,59 +168,53 @@ public class ChatCoordsClient implements ClientModInitializer {
 								"Coords by LOGIC"
 				));
 				Keybinding2 = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-								"Read Chat for Reaction",
-								InputUtil.Type.KEYSYM,
-								GLFW.GLFW_KEY_B,
-								"Coords by LOGIC"
-				));
-				Keybinding3 = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-								"Send Reaction",
+								"Load Math",
 								InputUtil.Type.KEYSYM,
 								GLFW.GLFW_KEY_M,
 								"Coords by LOGIC"
 				));
 
+
+				// Refreshes the client on every little single update
 				ClientTickEvents.END_CLIENT_TICK.register(client -> {
+						// Loads the chatLog very frequently, this is an expensive operation but our mod is about it so yeah
+						// + I really don't know how much time it really consumes
 						String chatLog = logFile();
+						// Gets REACTION >>
+						reaction(chatLog);
+						// Gets MATH >>
+						Math_reaction(chatLog);
+
+						// If N is pressed
 						if (Keybinding1.wasPressed()) {
 								canSendCoords = !canSendCoords; // toggle the sending on/off
 								if (canSendCoords) {
+										prevPos = null;
 										assert MinecraftClient.getInstance().player != null;
-										MinecraftClient.getInstance().player.sendMessage(Text.of("Auto Send Coords enabled")
-														.copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))));
-								} else {
-										assert MinecraftClient.getInstance().player != null;
-										MinecraftClient.getInstance().player.sendMessage(Text.of("Auto Send Coords disabled")
+										MinecraftClient.getInstance().player.sendMessage(Text.of("Don't move teleport detect enabled")
 														.copy().setStyle(Style.EMPTY.withColor(TextColor.parse("red"))));
+								} else {
+										prevPos = null;
+										assert MinecraftClient.getInstance().player != null;
+										MinecraftClient.getInstance().player.sendMessage(Text.of("Free to move teleport detect disabled")
+														.copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))));
 								}
 						}
 
-						if (canSendCoords && System.currentTimeMillis() - lastSentTime >= 1000) {
-								// Send the coordinates every 1 second
-								assert client.player != null;
-								double x = client.player.getX();
-								double y = client.player.getY();
-								double z = client.player.getZ();
-								xRounded = String.format("%.0f", x);
-								yRounded = String.format("%.0f", y);
-								zRounded = String.format("%.0f", z);
-
-
-								String coords = "x" + xRounded + ", " + "y" + yRounded + ", " + "z" + zRounded;
-
-								assert MinecraftClient.getInstance().player != null;
-								MinecraftClient.getInstance().player.sendMessage(Text.of(coords));
-
-								lastSentTime = System.currentTimeMillis();
+						// Calls the function to update co-ordinates
+						// update_Coordinates(canSendCoords);
+						if (canSendCoords) {
+								try {
+										is_Teleported();
+								} catch (AWTException | InterruptedException e) {
+										throw new RuntimeException(e);
+								}
 						}
+
 
 						if (Keybinding2.wasPressed()) {
-								reaction(chatLog);
-						}
-
-						if (Keybinding3.wasPressed()) {
 								String line = "---------------------------------------------";
-								String msg = "REACTION » First to type win in the chat wins";
+								String msg = "MATH » 2 + 3 + 100 * 5 = ?";
 
 								assert MinecraftClient.getInstance().player != null;
 								MinecraftClient.getInstance().player.sendMessage(Text.of(line));
@@ -174,4 +224,5 @@ public class ChatCoordsClient implements ClientModInitializer {
 				});
 
 		}
+
 }
