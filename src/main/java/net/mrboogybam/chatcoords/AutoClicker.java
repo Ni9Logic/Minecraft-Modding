@@ -1,49 +1,51 @@
 package net.mrboogybam.chatcoords;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Vec3d;
+import java.awt.*;
+import java.awt.event.InputEvent;
+import java.util.Random;
 
-public class AutoClicker {
-	private static boolean autoClickerActive = false;
-	private static Vec3d initialRotation;
+public class AutoClicker implements Runnable {
+    private static final int MIN_DELAY_MS = 1000; // Minimum delay between clicks (in milliseconds)
+    private static final int MAX_DELAY_MS = 5000; // Maximum delay between clicks (in milliseconds)
 
-	public static void startAutoClicker(MinecraftClient client) {
-		initialRotation = client.player.getRotationVec(1.0F);
-		autoClickerActive = true;
+    private final Robot robot;
+    private final Random rand;
 
-		Thread clickerThread = new Thread(() -> {
-			while (autoClickerActive) {
-				if (client.currentScreen == null) {
-					if (!client.player.getRotationVec(1.0F).equals(initialRotation)) {
-						stopAutoClicker();
-					} else {
-						client.player.swingHand(Hand.MAIN_HAND);
-						HitResult hitResult = client.crosshairTarget;
-						if (hitResult != null && hitResult.getType() == HitResult.Type.ENTITY) {
-							client.interactionManager.attackEntity(client.player, ((EntityHitResult) hitResult).getEntity());
-						}
-					}
-				}
+    public AutoClicker() throws Exception {
+        this.robot = new Robot();
+        this.rand = new Random();
+    }
 
-				try {
-					Thread.sleep(100); // Adjust the delay between clicks (in milliseconds)
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		});
+    @Override
+    public void run() {
+        try {
+            while (!Thread.currentThread().isInterrupted()) {
+                // Generate a random delay between clicks (in milliseconds)
+                int delay = rand.nextInt(MAX_DELAY_MS - MIN_DELAY_MS) + MIN_DELAY_MS;
 
-		clickerThread.start();
-	}
+                // Click the left mouse button
+                robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+                robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
 
-	public static void stopAutoClicker() {
-		autoClickerActive = false;
-	}
+                // Sleep for the delay period
+                Thread.sleep(delay);
+            }
+        } catch (InterruptedException e) {
+            // Interrupted, stop the auto-clicking
+        }
+    }
 
-	public static boolean isAutoClickerActive() {
-		return autoClickerActive;
-	}
+    public static void auto_click() throws Exception {
+        // Start the auto-clicker thread
+        AutoClicker autoClicker = new AutoClicker();
+        Thread thread = new Thread(autoClicker);
+        thread.start();
+
+        // Wait for the thread to finish (or interrupt it)
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            thread.interrupt();
+        }
+    }
 }

@@ -3,13 +3,15 @@ package net.mrboogybam.chatcoords;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.glfw.GLFW;
 
@@ -19,14 +21,17 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Random;
 
 public class ChatCoordsClient implements ClientModInitializer {
 
-    public static final String LOG_PATH = "C:\\Users\\Rakhman Gul\\AppData\\Roaming\\.minecraft\\logs\\latest.log";
+    public static final String LOG_PATH = "C:\\Users\\Rakhman Gul\\Desktop\\Chat-Coords-main\\run\\logs\\latest.log";
 
     private static KeyBinding Keybinding1;
     private static KeyBinding Keybinding2;
-    private boolean canSendCoords = false;
+    private boolean canSendCordinates = false;
+    private boolean canAutoClick = false;
+    private long lastClickTime = 0;
     public static Vec3d prevPos = null;
 
     public static String logFile() {
@@ -34,7 +39,8 @@ public class ChatCoordsClient implements ClientModInitializer {
         try (BufferedReader br = new BufferedReader(new FileReader(LOG_PATH))) {
             String line;
             while ((line = br.readLine()) != null) {
-                sb.append(line).append("\n");
+                sb.append(line);
+                sb.append("\n");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -43,10 +49,8 @@ public class ChatCoordsClient implements ClientModInitializer {
     }
 
     public static void clearChatLog() {
-        try {
-            FileWriter fw = new FileWriter(LOG_PATH);
+        try (FileWriter fw = new FileWriter(LOG_PATH)) {
             fw.write("");
-            fw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -82,8 +86,13 @@ public class ChatCoordsClient implements ClientModInitializer {
         prevPos = curPos;
     }
 
-    public static void is_HandItem() {
-        // TODO We have to check that if the current item in our hand is not a sword, we just need to leave or exit the game.
+    public static String getItemNameInMainHand() {
+        MinecraftClient minecraftClient = MinecraftClient.getInstance();
+        if (minecraftClient.player == null) {
+            return "";
+        }
+        ItemStack itemStack = minecraftClient.player.getMainHandStack();
+        return itemStack.getName().getString();
     }
 
     @Override
@@ -98,36 +107,32 @@ public class ChatCoordsClient implements ClientModInitializer {
                 "Coords by LOGIC"
         ));
         Keybinding2 = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "Load Math",
+                "Auto Clicker",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_M,
                 "Coords by LOGIC"
         ));
 
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated, isDedicated) -> {
-        });
-
-
         // Refreshes the client on every little single update
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             // If N is pressed
             if (Keybinding1.wasPressed()) {
-                canSendCoords = !canSendCoords; // toggle the sending on/off
-                if (canSendCoords) {
+                canSendCordinates = !canSendCordinates; // toggle the sending on/off
+                if (canSendCordinates) {
                     prevPos = null;
                     assert MinecraftClient.getInstance().player != null;
                     MinecraftClient.getInstance().player.sendMessage(Text.of("Don't move teleport detect enabled")
-                            .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("red"))));
+                            .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("red"))), true);
                 } else {
                     prevPos = null;
                     assert MinecraftClient.getInstance().player != null;
                     MinecraftClient.getInstance().player.sendMessage(Text.of("Free to move teleport detect disabled")
-                            .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))));
+                            .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))), true);
                 }
             }
 
-            // Calls the function to update co-ordinates
-            if (canSendCoords) {
+            // Calls the function to detect teleportation
+            if (canSendCordinates) {
                 try {
                     is_Teleported();
                 } catch (AWTException | InterruptedException e) {
@@ -137,15 +142,47 @@ public class ChatCoordsClient implements ClientModInitializer {
 
 
             if (Keybinding2.wasPressed()) {
-                String line = "---------------------------------------------";
-                String msg = "MATH » 2 + 3 + 100 * 5 = ?";
+                canAutoClick = !canAutoClick; // toggle the sending on/off
+                if (canAutoClick) {
+                    assert MinecraftClient.getInstance().player != null;
+                    MinecraftClient.getInstance().player.sendMessage(Text.of("Auto Clicker Enabled")
+                            .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))), true);
+                } else {
+                    assert MinecraftClient.getInstance().player != null;
+                    MinecraftClient.getInstance().player.sendMessage(Text.of("Auto Clicker Disabled")
+                            .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("red"))), true);
+                }
+            }
 
-                assert MinecraftClient.getInstance().player != null;
-                MinecraftClient.getInstance().player.sendMessage(Text.of(line));
-                MinecraftClient.getInstance().player.sendMessage(Text.of(msg));
-                MinecraftClient.getInstance().player.sendMessage(Text.of(line));
+            // Calls the function to toggle auto clicking
+            if (canAutoClick) {
+                Random rand = new Random();
+                long currentTime = System.currentTimeMillis();
+                double clickInterval = 50 + rand.nextDouble() * 250; // Random interval between 50 ms and 300 ms
+
+                if (currentTime - lastClickTime >= clickInterval) {
+                    lastClickTime = currentTime;
+                }
+
+                if (client.currentScreen == null) {
+                    client.options.attackKey.setPressed(true);
+                    client.options.attackKey.wasPressed();
+
+                    HitResult rayTrace = client.crosshairTarget;
+                    if (rayTrace instanceof EntityHitResult && client.interactionManager != null) {
+                        client.interactionManager.attackEntity(client.player, ((EntityHitResult) rayTrace).getEntity());
+                    }
+                } else {
+                    MinecraftClient.getInstance().options.attackKey.setPressed(false);
+                }
+
+
+//                try {
+//                    AutoClicker.auto_click();
+//                } catch (Exception e) {
+//                    throw new RuntimeException(e);
+//                }
             }
         });
-
     }
 }
