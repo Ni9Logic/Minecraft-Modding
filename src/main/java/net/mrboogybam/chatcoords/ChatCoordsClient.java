@@ -6,6 +6,9 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -31,7 +34,7 @@ public class ChatCoordsClient implements ClientModInitializer {
     private static KeyBinding Keybinding2;
     private boolean canSendCordinates = false;
     private boolean canAutoClick = false;
-    private long lastClickTime = 0;
+    private double lastClickTime = 0;
     public static Vec3d prevPos = null;
 
     public static String logFile() {
@@ -162,18 +165,21 @@ public class ChatCoordsClient implements ClientModInitializer {
 
                 if (currentTime - lastClickTime >= clickInterval) {
                     lastClickTime = currentTime;
-                }
 
-                if (client.currentScreen == null) {
-                    client.options.attackKey.setPressed(true);
-                    client.options.attackKey.wasPressed();
+                    if (client.currentScreen == null) {
+                        HitResult rayTrace = client.crosshairTarget;
 
-                    HitResult rayTrace = client.crosshairTarget;
-                    if (rayTrace instanceof EntityHitResult && client.interactionManager != null) {
-                        client.interactionManager.attackEntity(client.player, ((EntityHitResult) rayTrace).getEntity());
+                        if (rayTrace instanceof EntityHitResult) {
+                            Entity entity = ((EntityHitResult) rayTrace).getEntity();
+                            if (entity instanceof LivingEntity && !(entity instanceof PlayerEntity)) {
+                                client.options.attackKey.setPressed(true);
+                                client.options.attackKey.wasPressed();
+                                client.interactionManager.attackEntity(client.player, entity);
+                            }
+                        }
                     }
                 } else {
-                    MinecraftClient.getInstance().options.attackKey.setPressed(false);
+                    client.options.attackKey.setPressed(false);
                 }
 
 
