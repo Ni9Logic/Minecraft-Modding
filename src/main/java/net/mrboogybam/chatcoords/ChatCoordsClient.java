@@ -20,15 +20,16 @@ import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 
 public class ChatCoordsClient implements ClientModInitializer {
 
-    public static final String LOG_PATH = "C:\\Users\\Rakhman Gul\\Desktop\\Chat-Coords-main\\run\\logs\\latest.log";
-
+    // TODO We will be transitioning our existing Python scripts into AutoHotkey (AHK) scripts, which will be conveniently toggleable within the game.
+    // TODO Alternatively, we can continue utilizing Python scripts alongside AHK, enabling us to leverage the strengths of
+    //  both languages to achieve our desired functionality.
+    // TODO We will develop a dedicated function to determine the name of the item held in our main hand.
+    //  This information will be crucial in detecting any attempts by administrators to replace our main hand item or monitor our responsiveness,
+    //  particularly in the context of auto clicker detection.
     private static KeyBinding Keybinding1;
     private static KeyBinding Keybinding2;
     private boolean canSendCordinates = false;
@@ -36,28 +37,6 @@ public class ChatCoordsClient implements ClientModInitializer {
     boolean isScriptRunning = false;
     Process process = null;
     public static Vec3d prevPos = null;
-
-    public static String logFile() {
-        StringBuilder sb = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new FileReader(LOG_PATH))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-                sb.append("\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return sb.toString();
-    }
-
-    public static void clearChatLog() {
-        try (FileWriter fw = new FileWriter(LOG_PATH)) {
-            fw.write("");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static void is_Teleported() throws AWTException, InterruptedException {
         // We are checking this because after exiting it's so fast that it still manages to call this function and the game crashes right there
@@ -162,7 +141,7 @@ public class ChatCoordsClient implements ClientModInitializer {
                             .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("red"))), true);
                 }
             }
-            // test
+
             // Calls the function to toggle auto clicking
             if (canAutoClick && client.currentScreen == null) {
                 HitResult rayTrace = client.crosshairTarget;
