@@ -32,7 +32,7 @@ public class ChatCoordsClient implements ClientModInitializer {
     //  particularly in the context of auto clicker detection.
     private static KeyBinding Keybinding1;
     private static KeyBinding Keybinding2;
-    private boolean canSendCordinates = false;
+    private boolean canTeleport = false;
     private boolean canAutoClick = false;
     boolean isScriptRunning = false;
     Process process = null;
@@ -75,7 +75,7 @@ public class ChatCoordsClient implements ClientModInitializer {
         }
         ItemStack itemStack = minecraftClient.player.getMainHandStack();
         return itemStack.getName().getString();
-    }
+    } // Will be used later
 
     @Override
     public void onInitializeClient() {
@@ -99,8 +99,8 @@ public class ChatCoordsClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             // If N is pressed
             if (Keybinding1.wasPressed()) {
-                canSendCordinates = !canSendCordinates; // toggle the sending on/off
-                if (canSendCordinates) {
+                canTeleport = !canTeleport; // toggle the sending on/off
+                if (canTeleport) {
                     prevPos = null;
                     assert MinecraftClient.getInstance().player != null;
                     MinecraftClient.getInstance().player.sendMessage(Text.of("Don't move teleport detect enabled")
@@ -114,7 +114,7 @@ public class ChatCoordsClient implements ClientModInitializer {
             }
 
             // Calls the function to detect teleportation
-            if (canSendCordinates) {
+            if (canTeleport) {
                 try {
                     is_Teleported();
                 } catch (AWTException | InterruptedException e) {
