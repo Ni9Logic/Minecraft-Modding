@@ -162,7 +162,7 @@ public class ChatCoordsClient implements ClientModInitializer {
                             .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("red"))), true);
                 }
             }
-
+            // test
             // Calls the function to toggle auto clicking
             if (canAutoClick && client.currentScreen == null) {
                 HitResult rayTrace = client.crosshairTarget;
