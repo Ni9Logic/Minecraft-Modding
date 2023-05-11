@@ -24,7 +24,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Random;
 
 public class ChatCoordsClient implements ClientModInitializer {
 
@@ -34,7 +33,8 @@ public class ChatCoordsClient implements ClientModInitializer {
     private static KeyBinding Keybinding2;
     private boolean canSendCordinates = false;
     private boolean canAutoClick = false;
-    private double lastClickTime = 0;
+    boolean isScriptRunning = false;
+    Process process = null;
     public static Vec3d prevPos = null;
 
     public static String logFile() {
@@ -151,6 +151,12 @@ public class ChatCoordsClient implements ClientModInitializer {
                     MinecraftClient.getInstance().player.sendMessage(Text.of("Auto Clicker Enabled")
                             .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))), true);
                 } else {
+                    if (isScriptRunning && process != null && process.isAlive()) {
+                        System.out.println("Process Destroyed");
+                        process.destroy();
+                        process = null; // Reset the process variable
+                        isScriptRunning = false; // Reset the flag since the script is no longer running
+                    }
                     assert MinecraftClient.getInstance().player != null;
                     MinecraftClient.getInstance().player.sendMessage(Text.of("Auto Clicker Disabled")
                             .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("red"))), true);
@@ -158,36 +164,34 @@ public class ChatCoordsClient implements ClientModInitializer {
             }
 
             // Calls the function to toggle auto clicking
-            if (canAutoClick) {
-                Random rand = new Random();
-                long currentTime = System.currentTimeMillis();
-                double clickInterval = 50 + rand.nextDouble() * 250; // Random interval between 50 ms and 300 ms
+            if (canAutoClick && client.currentScreen == null) {
+                HitResult rayTrace = client.crosshairTarget;
 
-                if (currentTime - lastClickTime >= clickInterval) {
-                    lastClickTime = currentTime;
-
-                    if (client.currentScreen == null) {
-                        HitResult rayTrace = client.crosshairTarget;
-
-                        if (rayTrace instanceof EntityHitResult) {
-                            Entity entity = ((EntityHitResult) rayTrace).getEntity();
-                            if (entity instanceof LivingEntity && !(entity instanceof PlayerEntity)) {
-                                client.options.attackKey.setPressed(true);
-                                client.options.attackKey.wasPressed();
-                                client.interactionManager.attackEntity(client.player, entity);
+                if (rayTrace instanceof EntityHitResult) {
+                    Entity entity = ((EntityHitResult) rayTrace).getEntity();
+                    if (entity instanceof LivingEntity && !(entity instanceof PlayerEntity)) {
+                        if (!isScriptRunning && process == null) {
+                            String ahkScriptPath = "C:\\Users\\Rakhman Gul\\AppData\\Roaming\\.minecraft\\mods\\AutoClicker.ahk";
+                            String autohotkeyPath = "C:\\Program Files\\AutoHotkey\\AutoHotkey.exe";
+                            ProcessBuilder processBuilder = new ProcessBuilder(autohotkeyPath, ahkScriptPath);
+                            try {
+                                process = processBuilder.start();
+                                System.out.println("Process started");
+                                isScriptRunning = true; // Set the flag to indicate the script is running
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
                         }
                     }
                 } else {
-                    client.options.attackKey.setPressed(false);
+                    // Terminate the subprocess if it was started and is still running
+                    if (isScriptRunning && process != null && process.isAlive()) {
+                        System.out.println("Process Destroyed");
+                        process.destroy();
+                        process = null; // Reset the process variable
+                        isScriptRunning = false; // Reset the flag since the script is no longer running
+                    }
                 }
-
-
-//                try {
-//                    AutoClicker.auto_click();
-//                } catch (Exception e) {
-//                    throw new RuntimeException(e);
-//                }
             }
         });
     }
