@@ -2,13 +2,15 @@ package net.mrboogybam.chatcoords;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.hud.ChatHud;
+import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -19,8 +21,8 @@ import net.minecraft.util.math.Vec3d;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.List;
 
 public class ChatCoordsClient implements ClientModInitializer {
 
@@ -30,15 +32,21 @@ public class ChatCoordsClient implements ClientModInitializer {
     // TODO We will develop a dedicated function to determine the name of the item held in our main hand.
     //  This information will be crucial in detecting any attempts by administrators to replace our main hand item or monitor our responsiveness,
     //  particularly in the context of auto clicker detection.
+
+    private static final String debugLogFile = "C:\\Users\\Rakhman Gul\\Desktop\\Chat-Coords-main\\run\\logs\\latest.log";
     private static KeyBinding Keybinding1;
     private static KeyBinding Keybinding2;
-    private boolean canTeleport = false;
+    private static KeyBinding Keybinding3;
+    private static boolean canTeleport = false;
     private boolean canAutoClick = false;
     boolean isScriptRunning = false;
+    private static boolean isLockItem = false;
+    private static String target_item = "";
     Process process = null;
     public static Vec3d prevPos = null;
 
-    public static void is_Teleported() throws AWTException, InterruptedException {
+
+    public static void is_Teleported() throws AWTException, InterruptedException, IOException {
         // We are checking this because after exiting it's so fast that it still manages to call this function and the game crashes right there
         if (MinecraftClient.getInstance().player == null) {
             return;
@@ -51,18 +59,11 @@ public class ChatCoordsClient implements ClientModInitializer {
             double dz = curPos.getZ() - prevPos.getZ();
             double dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
             if (dist > 0.1) {
-                Robot robot = new Robot();
 
-                robot.keyPress(KeyEvent.VK_ESCAPE);
-                robot.keyRelease(KeyEvent.VK_ESCAPE);
-
-                for (int i = 0; i < 8; i++) {
-                    robot.keyPress(KeyEvent.VK_TAB);
-                    robot.keyRelease(KeyEvent.VK_TAB);
-                }
-
-                robot.keyPress(KeyEvent.VK_ENTER);
-                robot.keyRelease(KeyEvent.VK_ENTER);
+                MinecraftClient.getInstance().setScreen(new ChatScreen("??, oh cmon' this is literally abuse? seriously?? am out man"));
+                ProcessBuilder pb = new ProcessBuilder("python", "C:\\Users\\Rakhman Gul\\Desktop\\Programming\\Minecraft\\syss\\exit.py");
+                pb.start();
+                canTeleport = !canTeleport;
             }
         }
         prevPos = curPos;
@@ -77,26 +78,62 @@ public class ChatCoordsClient implements ClientModInitializer {
         return itemStack.getName().getString();
     } // Will be used later
 
+    private ChatHud chatHud;
+
     @Override
     public void onInitializeClient() {
 
+
         // Basically when the client turns on
         System.setProperty("java.awt.headless", "false");
-        Keybinding1 = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "Teleport Detector",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_N,
-                "Coords by LOGIC"
-        ));
-        Keybinding2 = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "Auto Clicker",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_M,
-                "Coords by LOGIC"
-        ));
+        // Register the keybindings without adding them to the keybind menu
+        Keybinding1 = new KeyBinding("key.teleport_detector", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_N, "key.category.coords_by_logic");
+        Keybinding2 = new KeyBinding("key.auto_clicker", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_M, "key.category.coords_by_logic");
+        Keybinding3 = new KeyBinding("key.lock_hand_item", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_B, "key.category.coords_by_logic");
 
         // Refreshes the client on every little single update
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            onGameTick();
+            chatHud = MinecraftClient.getInstance().inGameHud.getChatHud();
+            // If B is pressed
+            if (Keybinding3.wasPressed()) {
+                isLockItem = !isLockItem;
+                if (isLockItem) {
+                    target_item = getItemNameInMainHand();
+                    assert MinecraftClient.getInstance().player != null;
+                    MinecraftClient.getInstance().player.sendMessage(Text.of(target_item + " has been locked")
+                            .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("red"))), true);
+                } else {
+                    assert MinecraftClient.getInstance().player != null;
+                    MinecraftClient.getInstance().player.sendMessage(Text.of(target_item + " has been unlocked")
+                            .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))), true);
+                }
+            }
+
+            if (isLockItem) {
+                Thread getitem = new Thread(() -> {
+                    assert MinecraftClient.getInstance().player != null;
+                    PlayerInventory inventory = MinecraftClient.getInstance().player.getInventory();
+                    if (!getItemNameInMainHand().equals(target_item)) {
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                        for (int slot = 0; slot < inventory.size(); slot++) {
+                            ItemStack itemStack = inventory.getStack(slot);
+                            if (itemStack.getName().getString().equals(target_item)) {
+                                ItemStack mainHandItem = inventory.getMainHandStack();
+                                inventory.setStack(slot, mainHandItem);
+                                inventory.setStack(inventory.selectedSlot, itemStack);
+                                break;
+                            }
+                        }
+                    }
+                });
+                getitem.start();
+            }
+
             // If N is pressed
             if (Keybinding1.wasPressed()) {
                 canTeleport = !canTeleport; // toggle the sending on/off
@@ -117,7 +154,7 @@ public class ChatCoordsClient implements ClientModInitializer {
             if (canTeleport) {
                 try {
                     is_Teleported();
-                } catch (AWTException | InterruptedException e) {
+                } catch (AWTException | InterruptedException | IOException e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -131,7 +168,6 @@ public class ChatCoordsClient implements ClientModInitializer {
                             .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))), true);
                 } else {
                     if (isScriptRunning && process != null && process.isAlive()) {
-                        System.out.println("Process Destroyed");
                         process.destroy();
                         process = null; // Reset the process variable
                         isScriptRunning = false; // Reset the flag since the script is no longer running
@@ -144,34 +180,81 @@ public class ChatCoordsClient implements ClientModInitializer {
 
             // Calls the function to toggle auto clicking
             if (canAutoClick && client.currentScreen == null) {
-                HitResult rayTrace = client.crosshairTarget;
-
-                if (rayTrace instanceof EntityHitResult) {
-                    Entity entity = ((EntityHitResult) rayTrace).getEntity();
-                    if (entity instanceof LivingEntity && !(entity instanceof PlayerEntity)) {
-                        if (!isScriptRunning && process == null) {
-                            String ahkScriptPath = "C:\\Users\\Rakhman Gul\\AppData\\Roaming\\.minecraft\\mods\\AutoClicker.ahk";
-                            String autohotkeyPath = "C:\\Program Files\\AutoHotkey\\AutoHotkey.exe";
-                            ProcessBuilder processBuilder = new ProcessBuilder(autohotkeyPath, ahkScriptPath);
-                            try {
-                                process = processBuilder.start();
-                                System.out.println("Process started");
-                                isScriptRunning = true; // Set the flag to indicate the script is running
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                Thread autoclick = new Thread(() -> {
+                    if (!getItemNameInMainHand().equals(target_item)) {
+                        try {
+                            System.out.println(getItemNameInMainHand() + target_item);
+                            Thread.sleep(3000);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
                         }
                     }
-                } else {
-                    // Terminate the subprocess if it was started and is still running
-                    if (isScriptRunning && process != null && process.isAlive()) {
-                        System.out.println("Process Destroyed");
-                        process.destroy();
-                        process = null; // Reset the process variable
-                        isScriptRunning = false; // Reset the flag since the script is no longer running
+                    HitResult rayTrace = client.crosshairTarget;
+
+                    if (rayTrace instanceof EntityHitResult) {
+                        Entity entity = ((EntityHitResult) rayTrace).getEntity();
+                        if (entity instanceof LivingEntity && !(entity instanceof PlayerEntity)) {
+                            if (!isScriptRunning && process == null) {
+                                String ahkScriptPath = "C:\\Users\\Rakhman Gul\\AppData\\Roaming\\.minecraft\\mods\\AutoClicker.ahk";
+                                String autohotkeyPath = "C:\\Program Files\\AutoHotkey\\AutoHotkey.exe";
+                                ProcessBuilder processBuilder = new ProcessBuilder(autohotkeyPath, ahkScriptPath);
+                                try {
+                                    process = processBuilder.start();
+                                    isScriptRunning = true; // Set the flag to indicate the script is running
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    } else {
+                        // Terminate the subprocess if it was started and is still running
+                        if (isScriptRunning && process != null && process.isAlive()) {
+                            process.destroy();
+                            process = null; // Reset the process variable
+                            isScriptRunning = false; // Reset the flag since the script is no longer running
+                        }
                     }
-                }
+                });
+
+                autoclick.start();
             }
         });
+
+
+    }
+
+    private void processChatMessages() {
+        if (chatHud == null) {
+            // ChatHud instance is not available yet, so exit early
+            return;
+        }
+        // Retrieve the chat messages
+        List<String> messages = chatHud.getMessageHistory();
+
+        // Process the chat messages as needed
+        if (messages.contains("REACTION")) {
+            assert MinecraftClient.getInstance().player != null;
+            MinecraftClient.getInstance().player.sendMessage(Text.of("CHAT GAME FOUND")
+                    .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))), true);
+        } else if (messages.contains("MATH")) {
+            assert MinecraftClient.getInstance().player != null;
+            MinecraftClient.getInstance().player.sendMessage(Text.of("CHAT GAME FOUND")
+                    .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))), true);
+        } else if (messages.contains("TRIVIA")) {
+            assert MinecraftClient.getInstance().player != null;
+            MinecraftClient.getInstance().player.sendMessage(Text.of("CHAT GAME FOUND")
+                    .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))), true);
+        } else if (messages.contains("SCRAMBLE")) {
+            assert MinecraftClient.getInstance().player != null;
+            MinecraftClient.getInstance().player.sendMessage(Text.of("CHAT GAME FOUND")
+                    .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))), true);
+        }
+        chatHud.clear(true);
+    }
+
+    // Example usage during game tick
+    public void onGameTick() {
+        // Process chat messages
+        processChatMessages();
     }
 }
