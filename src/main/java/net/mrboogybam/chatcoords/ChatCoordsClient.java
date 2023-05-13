@@ -20,7 +20,9 @@ import net.minecraft.util.math.Vec3d;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.Random;
 
 public class ChatCoordsClient implements ClientModInitializer {
 
@@ -173,35 +175,35 @@ public class ChatCoordsClient implements ClientModInitializer {
             }
 
             // Calls the function to toggle auto clicking
-            // Todo Convert this into a thread and implement robot with literal random cps in this
             if (canAutoClick && client.currentScreen == null) {
+                Thread AutoClicker = new Thread(() -> {
+                    HitResult rayTrace = client.crosshairTarget;
 
-                HitResult rayTrace = client.crosshairTarget;
-
-                if (rayTrace instanceof EntityHitResult) {
-                    Entity entity = ((EntityHitResult) rayTrace).getEntity();
-                    if (entity instanceof LivingEntity && !(entity instanceof PlayerEntity)) {
-                        if (!isScriptRunning && process == null) {
-                            String ahkScriptPath = "C:\\Users\\Rakhman Gul\\AppData\\Roaming\\.minecraft\\mods\\AutoClicker.ahk";
-                            String autohotkeyPath = "C:\\Program Files\\AutoHotkey\\AutoHotkey.exe";
-                            ProcessBuilder processBuilder = new ProcessBuilder(autohotkeyPath, ahkScriptPath);
+                    if (rayTrace instanceof EntityHitResult) {
+                        Entity entity = ((EntityHitResult) rayTrace).getEntity();
+                        if (entity instanceof LivingEntity && !(entity instanceof PlayerEntity)) {
                             try {
-                                process = processBuilder.start();
-                                isScriptRunning = true; // Set the flag to indicate the script is running
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                                if (target_item.equals(getItemNameInMainHand())) {
+                                    Robot robot = new Robot();
+                                    Random random = new Random();
+                                    int sleepTime = 60 + random.nextInt(241);
+
+                                    robot.mousePress(KeyEvent.BUTTON1_DOWN_MASK);
+                                    robot.mouseRelease(KeyEvent.BUTTON1_DOWN_MASK);
+
+                                    Thread.sleep(sleepTime);
+                                }
+                            } catch (AWTException | InterruptedException e) {
+                                throw new RuntimeException(e);
                             }
+
                         }
                     }
-                } else {
-                    // Terminate the subprocess if it was started and is still running
-                    if (isScriptRunning && process != null && process.isAlive()) {
-                        process.destroy();
-                        process = null; // Reset the process variable
-                        isScriptRunning = false; // Reset the flag since the script is no longer running
-                    }
-                }
+                });
+
+                AutoClicker.start();
             }
+
         });
     }
 }
