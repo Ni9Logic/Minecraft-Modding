@@ -22,7 +22,6 @@ import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.List;
 
 public class ChatCoordsClient implements ClientModInitializer {
 
@@ -42,13 +41,17 @@ public class ChatCoordsClient implements ClientModInitializer {
     Process process = null;
     public static Vec3d prevPos = null;
 
+    // One and only
+
+    static MinecraftClient minecraft = MinecraftClient.getInstance();
+
 
     public static void is_Teleported() throws AWTException, InterruptedException, IOException {
         // We are checking this because after exiting it's so fast that it still manages to call this function and the game crashes right there
         if (MinecraftClient.getInstance().player == null) {
             return;
         }
-        Vec3d curPos = MinecraftClient.getInstance().player.getPos();
+        Vec3d curPos = minecraft.player.getPos();
         if (prevPos != null && !prevPos.equals(curPos)) {
             // Checking difference
             double dx = curPos.getX() - prevPos.getX();
@@ -57,7 +60,7 @@ public class ChatCoordsClient implements ClientModInitializer {
             double dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
             if (dist > 0.1) {
 
-                MinecraftClient.getInstance().setScreen(new ChatScreen("??, oh cmon' this is literally abuse? seriously?? am out man"));
+                minecraft.setScreen(new ChatScreen("??, oh cmon' this is literally abuse? seriously?? am out man"));
                 ProcessBuilder pb = new ProcessBuilder("python", "C:\\Users\\Rakhman Gul\\Desktop\\Programming\\Minecraft\\syss\\exit.py");
                 pb.start();
                 canTeleport = !canTeleport;
@@ -67,11 +70,10 @@ public class ChatCoordsClient implements ClientModInitializer {
     }
 
     public static String getItemNameInMainHand() {
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
-        if (minecraftClient.player == null) {
+        if (minecraft.player == null) {
             return "";
         }
-        ItemStack itemStack = minecraftClient.player.getMainHandStack();
+        ItemStack itemStack = minecraft.player.getMainHandStack();
         return itemStack.getName().getString();
     } // Will be used later
 
@@ -90,26 +92,25 @@ public class ChatCoordsClient implements ClientModInitializer {
 
         // Refreshes the client on every little single update
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            onGameTick();
-            chatHud = MinecraftClient.getInstance().inGameHud.getChatHud();
+            chatHud = minecraft.inGameHud.getChatHud();
             // If B is pressed
             if (KeyLockItem.wasPressed()) {
                 isLockItem = !isLockItem;
                 if (isLockItem) {
                     target_item = getItemNameInMainHand();
-                    assert MinecraftClient.getInstance().player != null;
-                    MinecraftClient.getInstance().player.sendMessage(Text.of(target_item + " has been locked")
+                    assert minecraft.player != null;
+                    minecraft.player.sendMessage(Text.of(target_item + " has been locked")
                             .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("red"))), true);
                 } else {
-                    assert MinecraftClient.getInstance().player != null;
-                    MinecraftClient.getInstance().player.sendMessage(Text.of(target_item + " has been unlocked")
+                    assert minecraft.player != null;
+                    minecraft.player.sendMessage(Text.of(target_item + " has been unlocked")
                             .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))), true);
                 }
             }
 
             if (isLockItem) {
-                assert MinecraftClient.getInstance().player != null;
-                PlayerInventory inventory = MinecraftClient.getInstance().player.getInventory();
+                assert minecraft.player != null;
+                PlayerInventory inventory = minecraft.player.getInventory();
                 for (int slot = 0; slot < inventory.size(); slot++) {
                     ItemStack itemStack = inventory.getStack(slot);
                     if (itemStack.getName().getString().equals(target_item)) {
@@ -126,13 +127,13 @@ public class ChatCoordsClient implements ClientModInitializer {
                 canTeleport = !canTeleport; // toggle the sending on/off
                 if (canTeleport) {
                     prevPos = null;
-                    assert MinecraftClient.getInstance().player != null;
-                    MinecraftClient.getInstance().player.sendMessage(Text.of("Don't move teleport detect enabled")
+                    assert minecraft.player != null;
+                    minecraft.player.sendMessage(Text.of("Don't move teleport detect enabled")
                             .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("red"))), true);
                 } else {
                     prevPos = null;
-                    assert MinecraftClient.getInstance().player != null;
-                    MinecraftClient.getInstance().player.sendMessage(Text.of("Free to move teleport detect disabled")
+                    assert minecraft.player != null;
+                    minecraft.player.sendMessage(Text.of("Free to move teleport detect disabled")
                             .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))), true);
                 }
             }
@@ -150,8 +151,8 @@ public class ChatCoordsClient implements ClientModInitializer {
             if (KeyAutoClicker.wasPressed()) {
                 canAutoClick = !canAutoClick; // toggle the sending on/off
                 if (canAutoClick) {
-                    assert MinecraftClient.getInstance().player != null;
-                    MinecraftClient.getInstance().player.sendMessage(Text.of("Auto Clicker Enabled")
+                    assert minecraft.player != null;
+                    minecraft.player.sendMessage(Text.of("Auto Clicker Enabled")
                             .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))), true);
                 } else {
                     if (isScriptRunning && process != null && process.isAlive()) {
@@ -159,8 +160,8 @@ public class ChatCoordsClient implements ClientModInitializer {
                         process = null; // Reset the process variable
                         isScriptRunning = false; // Reset the flag since the script is no longer running
                     }
-                    assert MinecraftClient.getInstance().player != null;
-                    MinecraftClient.getInstance().player.sendMessage(Text.of("Auto Clicker Disabled")
+                    assert minecraft.player != null;
+                    minecraft.player.sendMessage(Text.of("Auto Clicker Disabled")
                             .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("red"))), true);
                 }
             }
@@ -195,26 +196,5 @@ public class ChatCoordsClient implements ClientModInitializer {
                 }
             }
         });
-
-
-    }
-
-    private void processChatMessages() {
-        if (chatHud == null) {
-            // ChatHud instance is not available yet, so exit early
-            return;
-        }
-        // Retrieve the chat messages
-        List<String> messages = chatHud.getMessageHistory();
-        if (messages.size() > 1) {
-            System.out.println(messages.get(messages.size() - 1));
-        }
-
-    }
-
-    // Example usage during game tick
-    public void onGameTick() {
-        // Process chat messages
-        processChatMessages();
     }
 }
