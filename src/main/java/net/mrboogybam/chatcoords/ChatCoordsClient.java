@@ -6,45 +6,33 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.util.Random;
 
 public class ChatCoordsClient implements ClientModInitializer {
 
     // Key binds
     private static KeyBinding KeyTeleportDetect;
-    private static KeyBinding KeyAutoClicker;
     private static KeyBinding KeyLockItem;
 
     // Booleans
     private static boolean canTeleport = false;
-    private boolean canAutoClick = false;
-    boolean isScriptRunning = false;
     private static boolean isLockItem = false;
 
     // Variables
-    private static String target_item = "";
-    Process process = null;
+    public static String target_item = "";
     public static Vec3d prevPos = null;
 
     // One and only
-
-    static MinecraftClient minecraft = MinecraftClient.getInstance();
+    public static MinecraftClient minecraft = MinecraftClient.getInstance();
 
 
     public static void is_Teleported() throws AWTException, InterruptedException, IOException {
@@ -60,7 +48,6 @@ public class ChatCoordsClient implements ClientModInitializer {
             double dz = curPos.getZ() - prevPos.getZ();
             double dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
             if (dist > 0.1) {
-
                 minecraft.setScreen(new ChatScreen("??, oh cmon' this is literally abuse? seriously?? am out man"));
                 ProcessBuilder pb = new ProcessBuilder("python", "C:\\Users\\Rakhman Gul\\Desktop\\Programming\\Minecraft\\syss\\exit.py");
                 pb.start();
@@ -86,7 +73,7 @@ public class ChatCoordsClient implements ClientModInitializer {
         System.setProperty("java.awt.headless", "false");
         // Register the keybindings without adding them to the keybind menu
         KeyTeleportDetect = new KeyBinding("key.teleport_detector", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_N, "key.category.coords_by_logic");
-        KeyAutoClicker = new KeyBinding("key.auto_clicker", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_M, "key.category.coords_by_logic");
+        AutoClicker.KeyAutoClicker = new KeyBinding("key.auto_clicker", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_M, "key.category.coords_by_logic");
         KeyLockItem = new KeyBinding("key.lock_hand_item", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_B, "key.category.coords_by_logic");
 
         // Refreshes the client on every little single update
@@ -156,54 +143,20 @@ public class ChatCoordsClient implements ClientModInitializer {
             }
 
 
-            if (KeyAutoClicker.wasPressed()) {
-                canAutoClick = !canAutoClick; // toggle the sending on/off
-                if (canAutoClick) {
-                    assert minecraft.player != null;
-                    minecraft.player.sendMessage(Text.of("Auto Clicker Enabled")
-                            .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))), true);
+            if (AutoClicker.KeyAutoClicker.wasPressed()) {
+                AutoClicker.canAutoClick = !AutoClicker.canAutoClick; // toggle the sending on/off
+                if (AutoClicker.canAutoClick) {
+                    AutoClicker.Send_Enable_Auto_Clicker_Text();
                 } else {
-                    if (isScriptRunning && process != null && process.isAlive()) {
-                        process.destroy();
-                        process = null; // Reset the process variable
-                        isScriptRunning = false; // Reset the flag since the script is no longer running
-                    }
-                    assert minecraft.player != null;
-                    minecraft.player.sendMessage(Text.of("Auto Clicker Disabled")
-                            .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("red"))), true);
+                    AutoClicker.Send_Disable_Auto_Clicker_Text();
                 }
             }
 
             // Calls the function to toggle auto clicking
-            if (canAutoClick && client.currentScreen == null) {
-                Thread AutoClicker = new Thread(() -> {
-                    HitResult rayTrace = client.crosshairTarget;
-
-                    if (rayTrace instanceof EntityHitResult) {
-                        Entity entity = ((EntityHitResult) rayTrace).getEntity();
-                        if (entity instanceof LivingEntity && !(entity instanceof PlayerEntity)) {
-                            try {
-                                if (target_item.equals(getItemNameInMainHand())) {
-                                    Robot robot = new Robot();
-                                    Random random = new Random();
-                                    int sleepTime = 60 + random.nextInt(241);
-
-                                    robot.mousePress(KeyEvent.BUTTON1_DOWN_MASK);
-                                    robot.mouseRelease(KeyEvent.BUTTON1_DOWN_MASK);
-
-                                    Thread.sleep(sleepTime);
-                                }
-                            } catch (AWTException | InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-
-                        }
-                    }
-                });
-
-                AutoClicker.start();
+            if (AutoClicker.canAutoClick && client.currentScreen == null) {
+                Thread AutoClickThread = new Thread(AutoClicker::AutoClick);
+                AutoClickThread.start();
             }
-
         });
     }
 }
