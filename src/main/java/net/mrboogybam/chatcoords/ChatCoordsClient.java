@@ -3,7 +3,6 @@ package net.mrboogybam.chatcoords;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
@@ -75,9 +74,7 @@ public class ChatCoordsClient implements ClientModInitializer {
         }
         ItemStack itemStack = minecraft.player.getMainHandStack();
         return itemStack.getName().getString();
-    } // Will be used later
-
-    private ChatHud chatHud;
+    }
 
     @Override
     public void onInitializeClient() {
@@ -92,7 +89,6 @@ public class ChatCoordsClient implements ClientModInitializer {
 
         // Refreshes the client on every little single update
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            chatHud = minecraft.inGameHud.getChatHud();
             // If B is pressed
             if (KeyLockItem.wasPressed()) {
                 isLockItem = !isLockItem;
