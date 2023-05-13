@@ -33,7 +33,7 @@ public class ChatCoordsClient implements ClientModInitializer {
     //  This information will be crucial in detecting any attempts by administrators to replace our main hand item or monitor our responsiveness,
     //  particularly in the context of auto clicker detection.
 
-    private static final String debugLogFile = "C:\\Users\\Rakhman Gul\\Desktop\\Chat-Coords-main\\run\\logs\\latest.log";
+    private static final String debugLogFile = "C:\\Users\\Rakhman Gul\\AppData\\Roaming\\.minecraft\\logs\\latest.log";
     private static KeyBinding Keybinding1;
     private static KeyBinding Keybinding2;
     private static KeyBinding Keybinding3;
