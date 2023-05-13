@@ -79,43 +79,7 @@ public class ChatCoordsClient implements ClientModInitializer {
         // Refreshes the client on every little single update
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             // If B is pressed
-            if (KeyLockItem.wasPressed()) {
-                isLockItem = !isLockItem;
-                if (isLockItem) {
-                    target_item = getItemNameInMainHand();
-                    assert minecraft.player != null;
-                    minecraft.player.sendMessage(Text.of(target_item + " has been locked")
-                            .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("red"))), true);
-                } else {
-                    assert minecraft.player != null;
-                    minecraft.player.sendMessage(Text.of(target_item + " has been unlocked")
-                            .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))), true);
-                }
-            }
-
-            if (isLockItem) {
-                Thread getitem = new Thread(() -> {
-                    assert MinecraftClient.getInstance().player != null;
-                    PlayerInventory inventory = MinecraftClient.getInstance().player.getInventory();
-                    if (!getItemNameInMainHand().equals(target_item)) {
-                        try {
-                            Thread.sleep(2000);
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
-                        for (int slot = 0; slot < inventory.size(); slot++) {
-                            ItemStack itemStack = inventory.getStack(slot);
-                            if (itemStack.getName().getString().equals(target_item)) {
-                                ItemStack mainHandItem = inventory.getMainHandStack();
-                                inventory.setStack(slot, mainHandItem);
-                                inventory.setStack(inventory.selectedSlot, itemStack);
-                                break;
-                            }
-                        }
-                    }
-                });
-                getitem.start();
-            }
+            handleLockHandItem();
 
             // If N is pressed
             if (KeyTeleportDetect.wasPressed()) {
@@ -158,5 +122,45 @@ public class ChatCoordsClient implements ClientModInitializer {
                 AutoClickThread.start();
             }
         });
+    }
+
+    public static void handleLockHandItem() {
+        if (KeyLockItem.wasPressed()) {
+            isLockItem = !isLockItem;
+            if (isLockItem) {
+                target_item = getItemNameInMainHand();
+                assert minecraft.player != null;
+                minecraft.player.sendMessage(Text.of(target_item + " has been locked")
+                        .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("red"))), true);
+            } else {
+                assert minecraft.player != null;
+                minecraft.player.sendMessage(Text.of(target_item + " has been unlocked")
+                        .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))), true);
+            }
+        }
+
+        if (isLockItem) {
+            Thread getitem = new Thread(() -> {
+                assert MinecraftClient.getInstance().player != null;
+                PlayerInventory inventory = MinecraftClient.getInstance().player.getInventory();
+                if (!getItemNameInMainHand().equals(target_item)) {
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    for (int slot = 0; slot < inventory.size(); slot++) {
+                        ItemStack itemStack = inventory.getStack(slot);
+                        if (itemStack.getName().getString().equals(target_item)) {
+                            ItemStack mainHandItem = inventory.getMainHandStack();
+                            inventory.setStack(slot, mainHandItem);
+                            inventory.setStack(inventory.selectedSlot, itemStack);
+                            break;
+                        }
+                    }
+                }
+            });
+            getitem.start();
+        }
     }
 }
