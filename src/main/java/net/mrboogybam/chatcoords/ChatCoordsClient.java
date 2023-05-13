@@ -29,9 +29,6 @@ public class ChatCoordsClient implements ClientModInitializer {
     // TODO We will be transitioning our existing Python scripts into AutoHotkey (AHK) scripts, which will be conveniently toggleable within the game.
     // TODO Alternatively, we can continue utilizing Python scripts alongside AHK, enabling us to leverage the strengths of
     //  both languages to achieve our desired functionality.
-    // TODO We will develop a dedicated function to determine the name of the item held in our main hand.
-    //  This information will be crucial in detecting any attempts by administrators to replace our main hand item or monitor our responsiveness,
-    //  particularly in the context of auto clicker detection.
 
 
     // Key binds
