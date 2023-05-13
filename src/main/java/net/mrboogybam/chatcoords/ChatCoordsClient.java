@@ -249,7 +249,7 @@ public class ChatCoordsClient implements ClientModInitializer {
             MinecraftClient.getInstance().player.sendMessage(Text.of("CHAT GAME FOUND")
                     .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))), true);
         }
-        chatHud.clear(true);
+        chatHud.reset();
     }
 
     // Example usage during game tick
