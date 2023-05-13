@@ -26,11 +26,6 @@ import java.util.List;
 
 public class ChatCoordsClient implements ClientModInitializer {
 
-    // TODO We will be transitioning our existing Python scripts into AutoHotkey (AHK) scripts, which will be conveniently toggleable within the game.
-    // TODO Alternatively, we can continue utilizing Python scripts alongside AHK, enabling us to leverage the strengths of
-    //  both languages to achieve our desired functionality.
-
-
     // Key binds
     private static KeyBinding KeyTeleportDetect;
     private static KeyBinding KeyAutoClicker;
