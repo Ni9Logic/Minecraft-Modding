@@ -105,17 +105,27 @@ public class ChatCoordsClient implements ClientModInitializer {
             }
 
             if (isLockItem) {
-                assert minecraft.player != null;
-                PlayerInventory inventory = minecraft.player.getInventory();
-                for (int slot = 0; slot < inventory.size(); slot++) {
-                    ItemStack itemStack = inventory.getStack(slot);
-                    if (itemStack.getName().getString().equals(target_item)) {
-                        ItemStack mainHandItem = inventory.getMainHandStack();
-                        inventory.setStack(slot, mainHandItem);
-                        inventory.setStack(inventory.selectedSlot, itemStack);
-                        break;
+                Thread getitem = new Thread(() -> {
+                    assert MinecraftClient.getInstance().player != null;
+                    PlayerInventory inventory = MinecraftClient.getInstance().player.getInventory();
+                    if (!getItemNameInMainHand().equals(target_item)) {
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                        for (int slot = 0; slot < inventory.size(); slot++) {
+                            ItemStack itemStack = inventory.getStack(slot);
+                            if (itemStack.getName().getString().equals(target_item)) {
+                                ItemStack mainHandItem = inventory.getMainHandStack();
+                                inventory.setStack(slot, mainHandItem);
+                                inventory.setStack(inventory.selectedSlot, itemStack);
+                                break;
+                            }
+                        }
                     }
-                }
+                });
+                getitem.start();
             }
 
             // If N is pressed
@@ -163,6 +173,7 @@ public class ChatCoordsClient implements ClientModInitializer {
             }
 
             // Calls the function to toggle auto clicking
+            // Todo Convert this into a thread and implement robot with literal random cps in this
             if (canAutoClick && client.currentScreen == null) {
 
                 HitResult rayTrace = client.crosshairTarget;
