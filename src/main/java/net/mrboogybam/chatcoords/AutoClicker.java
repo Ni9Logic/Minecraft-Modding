@@ -34,7 +34,6 @@ public class AutoClicker {
                         Robot robot = new Robot();
                         Random random = new Random();
                         int sleepTime = 70 + random.nextInt(450);
-                        System.out.println(sleepTime);
                         robot.mousePress(KeyEvent.BUTTON1_DOWN_MASK);
                         robot.mouseRelease(KeyEvent.BUTTON1_DOWN_MASK);
 

@@ -12,19 +12,19 @@ import java.util.concurrent.Executors;
 
 
 public class ChatCoordsClient implements ClientModInitializer {
-    // Todo Implement a log file yolo
     public static MinecraftClient minecraft = MinecraftClient.getInstance();
-    private boolean test = false;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
 
     @Override
     public void onInitializeClient() {
+        // Shuts down the threads to avoid resource leakage
         Runtime.getRuntime().addShutdownHook(new Thread(executor::shutdownNow));
 
         // Basically when the client turns on
         System.setProperty("java.awt.headless", "false");
-        // Register the keybindings without adding them to the keybind menu
+
+        // Register the keybindings without adding them to the key bind menu of minecraft
         TeleportDetect.KeyTeleportDetect = new KeyBinding("key.teleport_detector", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_N, "key.category.coords_by_logic");
         AutoClicker.KeyAutoClicker = new KeyBinding("key.auto_clicker", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_M, "key.category.coords_by_logic");
         LockItemInHand.KeyLockItem = new KeyBinding("key.lock_hand_item", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_B, "key.category.coords_by_logic");
