@@ -12,6 +12,7 @@ import java.util.concurrent.Executors;
 
 
 public class ChatCoordsClient implements ClientModInitializer {
+    // Todo Implement a log file
     public static MinecraftClient minecraft = MinecraftClient.getInstance();
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
