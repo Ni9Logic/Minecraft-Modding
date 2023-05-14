@@ -1,8 +1,8 @@
-# Chat Coords
-Chat Coords is a Minecraft mod that allows players to easily share their current coordinates with others in the game. With this mod, players no longer have to manually type out their coordinates in the chat. Instead, they can simply press a button to send their coordinates to the chat for all players to see.
+# Ni9-Logic's Mod
+Ni9Logic's modification is an advanced tool primarily designed to optimize mob farming operations within the gaming environment. The mod encompasses a range of sophisticated features including an Auto Clicker for efficient and repetitive actions, a Teleport Detector to track and manage teleportation events, and a Hand Item Lock that ensures the consistent availability of a chosen item for the player. This suite of tools is engineered to offer an enhanced gaming experience, enabling players to streamline their in-game tasks and focus on strategic gameplay.
 
 ## Features
-- Sends current coordinates in the game chat
+- #
 - Indicates the current dimension (Overworld, Nether, End)
 - Customizable keybind for sending coordinates
 
