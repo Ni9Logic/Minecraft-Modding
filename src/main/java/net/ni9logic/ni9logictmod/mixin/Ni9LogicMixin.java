@@ -10,6 +10,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class Ni9LogicMixin {
     @Inject(at = @At("HEAD"), method = "init()V")
     private void init(CallbackInfo info) {
-        // ChatCoords.LOGGER.info("This line is printed by THE chat coords mixin!");
+        // ni9logic.LOGGER.info("This line is printed by THE chat coords mixin!");
     }
 }

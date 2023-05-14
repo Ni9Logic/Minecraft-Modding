@@ -18,7 +18,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.ni9logic.ni9logictmod.ChatCoords"
+      "net.ni9logic.ni9logictmod.ni9logic"
     ],
     "client": [
       "net.ni9logic.ni9logictmod.Ni9LogicMod"

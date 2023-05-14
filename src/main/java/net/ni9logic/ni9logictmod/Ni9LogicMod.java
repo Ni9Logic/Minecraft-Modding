@@ -12,7 +12,7 @@ import java.util.concurrent.Executors;
 
 
 public class Ni9LogicMod implements ClientModInitializer {
-    public static MinecraftClient minecraft = MinecraftClient.getInstance();
+    public static final MinecraftClient minecraft = MinecraftClient.getInstance();
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
 
