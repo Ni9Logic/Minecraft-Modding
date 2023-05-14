@@ -1,4 +1,4 @@
-package net.ni9logic.ni9logictmod;
+package net.ni9logic.ni9logictmod.features;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
@@ -17,10 +17,10 @@ public class LockItemInHand {
 
 
     public static void handleLIH() {
-        if (LockItemInHand.KeyLockItem.wasPressed()) {
+        if (KeyLockItem.wasPressed()) {
             isLockItem = !isLockItem;
             if (isLockItem) {
-                target_item = LockItemInHand.getItemNameInMainHand();
+                target_item = getItemNameInMainHand();
                 assert minecraft.player != null;
                 minecraft.player.sendMessage(Text.of(target_item + " has been locked")
                         .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("red"))), true);

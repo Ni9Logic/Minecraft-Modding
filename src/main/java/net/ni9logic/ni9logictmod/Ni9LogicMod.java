@@ -5,6 +5,10 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.ni9logic.ni9logictmod.features.AutoClicker;
+import net.ni9logic.ni9logictmod.features.LockItemInHand;
+import net.ni9logic.ni9logictmod.features.RotationDetect;
+import net.ni9logic.ni9logictmod.features.TeleportDetect;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.concurrent.ExecutorService;
@@ -34,7 +38,10 @@ public class Ni9LogicMod implements ClientModInitializer {
             executor.submit(this::handleLockHandItem);
             executor.submit(this::handleTeleportDetect);
             executor.submit(this::handleAutoClicker);
+            executor.submit(this::handleRotationDetect);
         });
+
+
     }
 
     public void handleLockHandItem() {
@@ -47,5 +54,9 @@ public class Ni9LogicMod implements ClientModInitializer {
 
     public void handleAutoClicker() {
         AutoClicker.handleAC();
+    }
+
+    public void handleRotationDetect() {
+        RotationDetect.detectRotation();
     }
 }

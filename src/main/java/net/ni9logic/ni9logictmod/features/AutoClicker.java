@@ -1,4 +1,4 @@
-package net.ni9logic.ni9logictmod;
+package net.ni9logic.ni9logictmod.features;
 
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.entity.Entity;
@@ -19,7 +19,7 @@ import static net.ni9logic.ni9logictmod.Ni9LogicMod.minecraft;
 
 public class AutoClicker {
 
-    public static boolean canAutoClick = false;
+    private static boolean canAutoClick = false;
     public static KeyBinding KeyAutoClicker;
 
     public static void AutoClick() {
@@ -37,7 +37,7 @@ public class AutoClicker {
                         robot.mousePress(KeyEvent.BUTTON1_DOWN_MASK);
                         robot.mouseRelease(KeyEvent.BUTTON1_DOWN_MASK);
 
-                        Thread.sleep(sleepTime);
+                        Thread.sleep(sleepTime); // Randomizes the cps
                     }
                 } catch (AWTException | InterruptedException e) {
                     throw new RuntimeException(e);
@@ -60,18 +60,18 @@ public class AutoClicker {
     }
 
     public static void handleAC() {
-        if (AutoClicker.KeyAutoClicker.wasPressed()) {
-            AutoClicker.canAutoClick = !AutoClicker.canAutoClick; // toggle the sending on/off
-            if (AutoClicker.canAutoClick) {
-                AutoClicker.Send_Enable_Auto_Clicker_Text();
+        if (KeyAutoClicker.wasPressed()) {
+            canAutoClick = !canAutoClick; // toggle the sending on/off
+            if (canAutoClick) {
+                Send_Enable_Auto_Clicker_Text();
             } else {
-                AutoClicker.Send_Disable_Auto_Clicker_Text();
+                Send_Disable_Auto_Clicker_Text();
             }
         }
 
         // Calls the function to toggle auto clicking
-        if (AutoClicker.canAutoClick && minecraft.currentScreen == null) {
-            AutoClicker.AutoClick();
+        if (canAutoClick && minecraft.currentScreen == null) {
+            AutoClick();
         }
     }
 

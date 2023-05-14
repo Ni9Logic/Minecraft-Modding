@@ -1,4 +1,4 @@
-package net.ni9logic.ni9logictmod;
+package net.ni9logic.ni9logictmod.features;
 
 
 import net.minecraft.client.MinecraftClient;
