@@ -18,6 +18,7 @@ public class ChatCoordsClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        Runtime.getRuntime().addShutdownHook(new Thread(executor::shutdownNow));
 
         // Basically when the client turns on
         System.setProperty("java.awt.headless", "false");

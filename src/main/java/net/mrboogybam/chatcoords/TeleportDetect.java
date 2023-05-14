@@ -74,6 +74,9 @@ public class TeleportDetect {
                     robot.delay(300);
                 }
 
+                robot.keyPress(KeyEvent.VK_ENTER);
+                robot.keyRelease(KeyEvent.VK_ENTER);
+
                 canTeleport = !canTeleport;
             }
         }
