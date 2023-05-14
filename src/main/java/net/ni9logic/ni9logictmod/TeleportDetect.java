@@ -23,17 +23,11 @@ public class TeleportDetect {
     public static void detectTp() {
         if (KeyTeleportDetect.wasPressed()) {
             canTeleport = !canTeleport; // toggle the sending on/off
-            if (canTeleport) {
-                prevPos = null;
-                assert minecraft.player != null;
-                minecraft.player.sendMessage(Text.of("Don't move teleport detect enabled")
-                        .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("red"))), true);
-            } else {
-                prevPos = null;
-                assert minecraft.player != null;
-                minecraft.player.sendMessage(Text.of("Free to move teleport detect disabled")
-                        .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))), true);
-            }
+            prevPos = null;
+            assert minecraft.player != null;
+            String message = canTeleport ? "[ENABLED] DONT MOVE!" : "[DISABLED] FREE TO MOVE";
+            String color = canTeleport ? "red" : "green";
+            minecraft.player.sendMessage(Text.of(message).copy().setStyle(Style.EMPTY.withColor(TextColor.parse(color))), true);
         }
 
         // Calls the function to detect teleportation
@@ -82,6 +76,4 @@ public class TeleportDetect {
         }
         prevPos = curPos;
     }
-
-
 }
