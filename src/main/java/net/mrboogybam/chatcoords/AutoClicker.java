@@ -33,7 +33,7 @@ public class AutoClicker {
                     if (target_item.equals(getItemNameInMainHand())) {
                         Robot robot = new Robot();
                         Random random = new Random();
-                        int sleepTime = 400 + random.nextInt(1000);
+                        int sleepTime = 70 + random.nextInt(450);
                         System.out.println(sleepTime);
                         robot.mousePress(KeyEvent.BUTTON1_DOWN_MASK);
                         robot.mouseRelease(KeyEvent.BUTTON1_DOWN_MASK);
@@ -46,6 +46,7 @@ public class AutoClicker {
             }
         }
     }
+
 
     public static void Send_Enable_Auto_Clicker_Text() {
         assert ChatCoordsClient.minecraft.player != null;
