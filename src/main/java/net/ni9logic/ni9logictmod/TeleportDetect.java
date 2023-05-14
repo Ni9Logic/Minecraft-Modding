@@ -25,7 +25,7 @@ public class TeleportDetect {
             canTeleport = !canTeleport; // toggle the sending on/off
             prevPos = null;
             assert minecraft.player != null;
-            String message = canTeleport ? "[ENABLED] DONT MOVE!" : "[DISABLED] FREE TO MOVE";
+            String message = canTeleport ? "[ENABLED] DONT MOVE!" : "[DISABLED] FREE TO MOVE!";
             String color = canTeleport ? "red" : "green";
             minecraft.player.sendMessage(Text.of(message).copy().setStyle(Style.EMPTY.withColor(TextColor.parse(color))), true);
         }
