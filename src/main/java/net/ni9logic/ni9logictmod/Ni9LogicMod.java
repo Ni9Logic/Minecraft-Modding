@@ -1,4 +1,4 @@
-package net.mrboogybam.chatcoords;
+package net.ni9logic.ni9logictmod;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-public class ChatCoordsClient implements ClientModInitializer {
+public class Ni9LogicMod implements ClientModInitializer {
     public static MinecraftClient minecraft = MinecraftClient.getInstance();
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 

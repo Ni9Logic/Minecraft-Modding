@@ -1,12 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.mrboogybam.chatcoords.mixin",
+  "package": "net.ni9logic.ni9logictmod.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
   ],
   "client": [
-    "ChatCoordsMixin"
+    "Ni9LogicMixin"
   ],
   "injectors": {
     "defaultRequire": 1

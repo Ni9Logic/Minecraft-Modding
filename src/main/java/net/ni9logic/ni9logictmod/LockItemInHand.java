@@ -1,4 +1,4 @@
-package net.mrboogybam.chatcoords;
+package net.ni9logic.ni9logictmod;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
@@ -8,7 +8,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 
-import static net.mrboogybam.chatcoords.ChatCoordsClient.minecraft;
+import static net.ni9logic.ni9logictmod.Ni9LogicMod.minecraft;
 
 public class LockItemInHand {
     public static KeyBinding KeyLockItem;

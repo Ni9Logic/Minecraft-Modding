@@ -18,14 +18,14 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.mrboogybam.chatcoords.ChatCoords"
+      "net.ni9logic.ni9logictmod.ChatCoords"
     ],
     "client": [
-      "net.mrboogybam.chatcoords.ChatCoordsClient"
+      "net.ni9logic.ni9logictmod.Ni9LogicMod"
     ]
   },
   "mixins": [
-    "ccoords.mixins.json"
+    "ni9logic.mixins.json"
   ],
 
   "depends": {

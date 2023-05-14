@@ -1,4 +1,4 @@
-package net.mrboogybam.chatcoords;
+package net.ni9logic.ni9logictmod;
 
 import net.fabricmc.api.ModInitializer;
 import org.apache.logging.log4j.LogManager;

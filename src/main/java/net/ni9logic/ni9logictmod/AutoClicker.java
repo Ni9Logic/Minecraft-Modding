@@ -1,4 +1,4 @@
-package net.mrboogybam.chatcoords;
+package net.ni9logic.ni9logictmod;
 
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.entity.Entity;
@@ -15,7 +15,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 
-import static net.mrboogybam.chatcoords.ChatCoordsClient.minecraft;
+import static net.ni9logic.ni9logictmod.Ni9LogicMod.minecraft;
 
 public class AutoClicker {
 

@@ -1,4 +1,4 @@
-package net.mrboogybam.chatcoords;
+package net.ni9logic.ni9logictmod;
 
 
 import net.minecraft.client.MinecraftClient;
@@ -13,7 +13,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 
-import static net.mrboogybam.chatcoords.ChatCoordsClient.minecraft;
+import static net.ni9logic.ni9logictmod.Ni9LogicMod.minecraft;
 
 public class TeleportDetect {
     public static KeyBinding KeyTeleportDetect;
