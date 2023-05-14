@@ -32,6 +32,7 @@ public class Ni9LogicMod implements ClientModInitializer {
         TeleportDetect.KeyTeleportDetect = new KeyBinding("key.teleport_detector", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_N, "key.category.coords_by_logic");
         AutoClicker.KeyAutoClicker = new KeyBinding("key.auto_clicker", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_M, "key.category.coords_by_logic");
         LockItemInHand.KeyLockItem = new KeyBinding("key.lock_hand_item", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_B, "key.category.coords_by_logic");
+        RotationDetect.KeyRotationDetect = new KeyBinding("key.detect_rotation", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_V, "key.category.coords_by_logic");
 
         // Refreshes the client on every little single update
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
