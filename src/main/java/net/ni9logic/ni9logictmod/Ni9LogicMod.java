@@ -5,10 +5,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.ni9logic.ni9logictmod.features.AutoClicker;
-import net.ni9logic.ni9logictmod.features.LockItemInHand;
-import net.ni9logic.ni9logictmod.features.RotationDetect;
-import net.ni9logic.ni9logictmod.features.TeleportDetect;
+import net.ni9logic.ni9logictmod.features.*;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.concurrent.ExecutorService;
@@ -33,6 +30,7 @@ public class Ni9LogicMod implements ClientModInitializer {
         AutoClicker.KeyAutoClicker = new KeyBinding("key.auto_clicker", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_M, "key.category.coords_by_logic");
         LockItemInHand.KeyLockItem = new KeyBinding("key.lock_hand_item", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_B, "key.category.coords_by_logic");
         RotationDetect.KeyRotationDetect = new KeyBinding("key.detect_rotation", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_V, "key.category.coords_by_logic");
+        OptionsScreen.GUI_KEY = new KeyBinding("key.GUI", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_O, "key.category.coords_by_logic");
 
         // Refreshes the client on every little single update
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -40,9 +38,8 @@ public class Ni9LogicMod implements ClientModInitializer {
             executor.submit(this::handleTeleportDetect);
             executor.submit(this::handleAutoClicker);
             executor.submit(this::handleRotationDetect);
+            handleGUI();
         });
-
-
     }
 
     public void handleLockHandItem() {
@@ -60,4 +57,11 @@ public class Ni9LogicMod implements ClientModInitializer {
     public void handleRotationDetect() {
         RotationDetect.detectRotation();
     }
+
+    public void handleGUI() {
+        while (OptionsScreen.GUI_KEY.wasPressed()) {
+            minecraft.execute(() -> minecraft.setScreen(new OptionsScreen()));
+        }
+    }
+
 }

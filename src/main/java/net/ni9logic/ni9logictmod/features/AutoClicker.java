@@ -18,8 +18,7 @@ import java.util.Random;
 import static net.ni9logic.ni9logictmod.Ni9LogicMod.minecraft;
 
 public class AutoClicker {
-
-    private static boolean canAutoClick = false;
+    public static boolean canAutoClick = false;
     public static KeyBinding KeyAutoClicker;
 
     public static void AutoClick() {
@@ -81,6 +80,14 @@ public class AutoClicker {
         }
         ItemStack itemStack = minecraft.player.getMainHandStack();
         return itemStack.getName().getString();
+    }
+
+    public static void setActive(boolean condi) {
+        canAutoClick = condi;
+    }
+
+    public static boolean isActive() {
+        return canAutoClick;
     }
 
 }
