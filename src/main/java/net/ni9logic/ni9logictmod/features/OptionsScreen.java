@@ -24,7 +24,7 @@ public class OptionsScreen extends Screen {
 
     @Override
     protected void init() {
-        int x = this.width / 2, y = this.height / 2;
+        int ReactionGame_X = this.width / 2 - 65, ReactionGame_Y = this.height / 2;
 
         ButtonWidget chatReactionGame = ButtonWidget.builder(
                         Text.of(""), // Initial empty button text
@@ -32,7 +32,7 @@ public class OptionsScreen extends Screen {
                             isReactionGameActive = !isReactionGameActive;
                             button.setMessage(getChatReactionGame(isReactionGameActive)); // Set button text based on the current state
                         })
-                .dimensions(x - 200, y - 44, 130, 20)
+                .dimensions(ReactionGame_X, ReactionGame_Y - 80, 130, 20)
                 .build();
 
         chatReactionGame.setMessage(getChatReactionGame(isReactionGameActive)); // Set initial button text
@@ -41,7 +41,18 @@ public class OptionsScreen extends Screen {
     }
 
     private Text getChatReactionGame(boolean isActive) {
-        return Text.of(isActive ? "Deactivate Reaction" : "Activate Reaction");
+        Style activateStyle = Style.EMPTY
+                .withColor(Formatting.DARK_GREEN)
+                .withItalic(true);
+        Style deactivateStyle = Style.EMPTY
+                .withColor(Formatting.DARK_RED)
+                .withItalic(true);
+
+        MutableText statusText = Text.of(isActive ? "ACTIVATED" : "DEACTIVATED")
+                .copy()
+                .setStyle(isActive ? activateStyle : deactivateStyle);
+
+        return Text.of("REACTION ").copy().append(statusText);
     }
 
 
@@ -67,11 +78,13 @@ public class OptionsScreen extends Screen {
 
         this.renderBackground(matrices);
         super.render(matrices, mouseX, mouseY, delta);
+        int titleWidth = this.textRenderer.getWidth(title);
+        int x = (this.width - titleWidth) / 2;
 
         this.textRenderer.drawWithShadow(
                 matrices,
                 title,
-                this.width / 2f - 57,
+                x,
                 this.height / 2f - 100,
                 0xFFFFFF);
 
