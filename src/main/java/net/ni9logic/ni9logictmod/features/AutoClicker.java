@@ -4,7 +4,6 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
@@ -29,7 +28,7 @@ public class AutoClicker {
             if (entity instanceof LivingEntity && !(entity instanceof PlayerEntity)) {
                 try {
                     // Only Attack enemies with locked item in hand
-                    if (LockItemInHand.target_item.equals(getItemNameInMainHand())) {
+                    if (LockItemInHand.target_item.equals(LockItemInHand.getItemNameInMainHand())) {
                         Robot robot = new Robot();
                         Random random = new Random();
                         int sleepTime = 70 + random.nextInt(450);
@@ -73,21 +72,4 @@ public class AutoClicker {
             AutoClick();
         }
     }
-
-    public static String getItemNameInMainHand() {
-        if (minecraft.player == null) {
-            return "";
-        }
-        ItemStack itemStack = minecraft.player.getMainHandStack();
-        return itemStack.getName().getString();
-    }
-
-    public static void setActive(boolean condi) {
-        canAutoClick = condi;
-    }
-
-    public static boolean isActive() {
-        return canAutoClick;
-    }
-
 }

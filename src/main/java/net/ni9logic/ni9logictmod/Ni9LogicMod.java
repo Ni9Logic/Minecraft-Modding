@@ -30,7 +30,7 @@ public class Ni9LogicMod implements ClientModInitializer {
         AutoClicker.KeyAutoClicker = new KeyBinding("key.auto_clicker", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_M, "key.category.coords_by_logic");
         LockItemInHand.KeyLockItem = new KeyBinding("key.lock_hand_item", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_B, "key.category.coords_by_logic");
         RotationDetect.KeyRotationDetect = new KeyBinding("key.detect_rotation", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_V, "key.category.coords_by_logic");
-        OptionsScreen.GUI_KEY = new KeyBinding("key.GUI", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_O, "key.category.coords_by_logic");
+        OptionsScreen.KEY_CHAT_GAMES = new KeyBinding("key.GUI", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_O, "key.category.coords_by_logic");
 
         // Refreshes the client on every little single update
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -38,7 +38,7 @@ public class Ni9LogicMod implements ClientModInitializer {
             executor.submit(this::handleTeleportDetect);
             executor.submit(this::handleAutoClicker);
             executor.submit(this::handleRotationDetect);
-            handleGUI();
+            executor.submit(this::handleGUI);
         });
     }
 
@@ -59,7 +59,7 @@ public class Ni9LogicMod implements ClientModInitializer {
     }
 
     public void handleGUI() {
-        while (OptionsScreen.GUI_KEY.wasPressed()) {
+        while (OptionsScreen.KEY_CHAT_GAMES.wasPressed()) {
             minecraft.execute(() -> minecraft.setScreen(new OptionsScreen()));
         }
     }

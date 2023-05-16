@@ -36,18 +36,20 @@ public class LockItemInHand {
             PlayerInventory inventory = MinecraftClient.getInstance().player.getInventory();
             if (!getItemNameInMainHand().equals(target_item)) {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(1000);
+
+                    for (int slot = 0; slot < inventory.size(); slot++) {
+                        ItemStack itemStack = inventory.getStack(slot);
+                        if (itemStack.getName().getString().equals(target_item)) {
+                            ItemStack mainHandItem = inventory.getMainHandStack();
+                            inventory.setStack(slot, mainHandItem);
+                            inventory.setStack(inventory.selectedSlot, itemStack);
+                            Thread.sleep(1000);
+                            break;
+                        }
+                    }
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
-                }
-                for (int slot = 0; slot < inventory.size(); slot++) {
-                    ItemStack itemStack = inventory.getStack(slot);
-                    if (itemStack.getName().getString().equals(target_item)) {
-                        ItemStack mainHandItem = inventory.getMainHandStack();
-                        inventory.setStack(slot, mainHandItem);
-                        inventory.setStack(inventory.selectedSlot, itemStack);
-                        break;
-                    }
                 }
             }
         }
