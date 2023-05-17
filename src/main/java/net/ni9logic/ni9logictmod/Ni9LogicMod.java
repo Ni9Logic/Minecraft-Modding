@@ -39,6 +39,7 @@ public class Ni9LogicMod implements ClientModInitializer {
             executor.submit(this::handleAutoClicker);
             executor.submit(this::handleRotationDetect);
             executor.submit(this::handleGUI);
+            executor.submit(this::handleChatGames);
         });
     }
 
@@ -64,4 +65,7 @@ public class Ni9LogicMod implements ClientModInitializer {
         }
     }
 
+    public void handleChatGames() {
+        chatGames.playChatGames();
+    }
 }

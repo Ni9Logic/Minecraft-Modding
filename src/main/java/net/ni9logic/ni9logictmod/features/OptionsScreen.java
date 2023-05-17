@@ -10,11 +10,11 @@ import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.ni9logic.ni9logictmod.features.chatgames.Reaction;
 
 import java.util.HashMap;
 
 public class OptionsScreen extends Screen {
-    public static boolean isReactionGameActive = false;
     public static KeyBinding KEY_CHAT_GAMES;
     private final HashMap<ButtonWidget, String> buttonTooltips = new HashMap<>();
 
@@ -29,15 +29,15 @@ public class OptionsScreen extends Screen {
         ButtonWidget chatReactionGame = ButtonWidget.builder(
                         Text.of(""), // Initial empty button text
                         (button) -> {
-                            isReactionGameActive = !isReactionGameActive;
-                            button.setMessage(getChatReactionGame(isReactionGameActive)); // Set button text based on the current state
+                            Reaction.isReactionGameActive = !Reaction.isReactionGameActive;
+                            button.setMessage(getChatReactionGame(Reaction.isReactionGameActive)); // Set button text based on the current state
                         })
                 .dimensions(ReactionGame_X, ReactionGame_Y - 80, 130, 20)
                 .build();
 
-        chatReactionGame.setMessage(getChatReactionGame(isReactionGameActive)); // Set initial button text
+        chatReactionGame.setMessage(getChatReactionGame(Reaction.isReactionGameActive)); // Set initial button text
 
-        this.buttonTooltips.put(this.addDrawableChild(chatReactionGame), "Click to start catching reaction chat games from chat");
+        this.buttonTooltips.put(this.addDrawableChild(chatReactionGame), "Click to start catching Reaction chat games from chat");
     }
 
     private Text getChatReactionGame(boolean isActive) {
@@ -48,7 +48,7 @@ public class OptionsScreen extends Screen {
                 .withColor(Formatting.DARK_RED)
                 .withItalic(true);
 
-        MutableText statusText = Text.of(isActive ? "ACTIVATED" : "DEACTIVATED")
+        MutableText statusText = Text.of(isActive ? "[ACTIVATED]" : "[DEACTIVATED]")
                 .copy()
                 .setStyle(isActive ? activateStyle : deactivateStyle);
 

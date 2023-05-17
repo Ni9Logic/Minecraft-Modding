@@ -4,9 +4,10 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 
@@ -46,15 +47,26 @@ public class AutoClicker {
 
 
     public static void Send_Enable_Auto_Clicker_Text() {
+        Style activateStyle = Style.EMPTY
+                .withColor(Formatting.DARK_GREEN)
+                .withBold(true);
         assert minecraft.player != null;
-        minecraft.player.sendMessage(Text.of("Auto Clicker Enabled")
-                .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))), true);
+
+        MutableText ac = Text.of("Auto Clicker").copy();
+        MutableText toggle = Text.of(" [ENABLED] ").copy().setStyle(activateStyle);
+
+        minecraft.player.sendMessage(ac.append(toggle), true);
     }
 
     public static void Send_Disable_Auto_Clicker_Text() {
+        Style deactivateStyle = Style.EMPTY
+                .withColor(Formatting.DARK_RED)
+                .withBold(true);
         assert minecraft.player != null;
-        minecraft.player.sendMessage(Text.of("Auto Clicker Disabled")
-                .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("red"))), true);
+        MutableText ac = Text.of("Auto Clicker").copy();
+        MutableText toggle = Text.of(" [DISABLED] ").copy().setStyle(deactivateStyle);
+
+        minecraft.player.sendMessage(ac.append(toggle), true);
     }
 
     public static void handleAC() {

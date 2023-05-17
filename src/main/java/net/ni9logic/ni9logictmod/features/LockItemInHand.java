@@ -4,9 +4,10 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
+import net.minecraft.util.Formatting;
 
 import static net.ni9logic.ni9logictmod.Ni9LogicMod.minecraft;
 
@@ -17,17 +18,30 @@ public class LockItemInHand {
 
 
     public static void handleLIH() {
+        MutableText ti = Text.of(getItemNameInMainHand()).copy();
+
         if (KeyLockItem.wasPressed()) {
             isLockItem = !isLockItem;
             if (isLockItem) {
+                Style activateStyle = Style.EMPTY
+                        .withColor(Formatting.DARK_RED)
+                        .withBold(true);
+
+                assert minecraft.player != null;
                 target_item = getItemNameInMainHand();
-                assert minecraft.player != null;
-                minecraft.player.sendMessage(Text.of(target_item + " has been locked")
-                        .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("red"))), true);
+                MutableText toggle = Text.of(" [LOCKED] ").copy().setStyle(activateStyle);
+
+                minecraft.player.sendMessage(ti.append(toggle), true);
             } else {
+                Style activateStyle = Style.EMPTY
+                        .withColor(Formatting.DARK_GREEN)
+                        .withBold(true);
+
                 assert minecraft.player != null;
-                minecraft.player.sendMessage(Text.of(target_item + " has been unlocked")
-                        .copy().setStyle(Style.EMPTY.withColor(TextColor.parse("green"))), true);
+                target_item = getItemNameInMainHand();
+                MutableText toggle = Text.of(" [UNLOCKED] ").copy().setStyle(activateStyle);
+
+                minecraft.player.sendMessage(ti.append(toggle), true);
             }
         }
 

@@ -2,11 +2,12 @@ package net.ni9logic.ni9logictmod.features;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.MathHelper;
-import net.ni9logic.utils.MyScreens;
+import net.ni9logic.utils.TypeitMessage;
 
 public class RotationDetect {
     public static KeyBinding KeyRotationDetect;
@@ -21,9 +22,16 @@ public class RotationDetect {
         if (KeyRotationDetect.wasPressed()) {
             isRotationDetect = !isRotationDetect; // toggle the sending on/off
             assert minecraft.player != null;
-            String message = isRotationDetect ? "[ENABLED] ROTATION DETECT!" : "[DISABLED] ROTATION DETECT!";
-            String color = isRotationDetect ? "green" : "red";
-            minecraft.player.sendMessage(Text.of(message).copy().setStyle(Style.EMPTY.withColor(TextColor.parse(color))), true);
+            Style activateStyle = Style.EMPTY
+                    .withColor(Formatting.DARK_RED)
+                    .withBold(true);
+            Style deactivateStyle = Style.EMPTY
+                    .withColor(Formatting.DARK_GREEN)
+                    .withBold(true);
+            MutableText toggle = Text.of(isRotationDetect ? " [ENABLED]" : " [DISABLED]").copy()
+                    .setStyle(isRotationDetect ? activateStyle : deactivateStyle);
+
+            minecraft.player.sendMessage(Text.of("Rotation Detect").copy().append(toggle), true);
             if (isRotationDetect) {
                 lastYaw = minecraft.player.getYaw();
             }
@@ -46,7 +54,16 @@ public class RotationDetect {
 
             // If the change in yaw is larger than the threshold, assume the player has been rotated
             if (changeInYaw > THRESHOLD) {
-                MyScreens.sendMyChatMessage("Why man? Lemme grind in peace", 1000);
+                try {
+                    Thread.sleep(1500);
+                    minecraft.player.networkHandler.sendChatMessage("Nice abuse man, so professional of you. Am out and done here");
+                    Thread.sleep(1000);
+
+                    TypeitMessage.exit_game();
+                    isRotationDetect = false;
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
             lastYaw = currentYaw;
         }
