@@ -28,7 +28,17 @@ experience, enabling players to streamline their in-game tasks and focus on stra
 - Is able to wait before auto clicking again if your inventory is shuffled
 - Is able to attack on mobs and mobs only
 
+## 4. Rotation Detector (In Progress)
+
+- Is able to detect if someone decided to change your yaw (pov) or degree of angle at your screen.
+
+## 5. Chat Games (In Progres)
+
 ## Installation & Usage
+
+### Note -
+
+The whole mode is currently in on going progress so kindly be patient.
 
 ### 1. Auto Clicker:
 
