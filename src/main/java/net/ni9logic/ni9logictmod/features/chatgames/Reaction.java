@@ -21,7 +21,7 @@ public class Reaction {
                     // Sends the words as soon as it gets it
                     assert MinecraftClient.getInstance().player != null;
 
-                    // Randomly answers on different intervals because it's super fast otherwise. It'll solve it in like 0.1 seconds.
+                    // Randomly answers on different intervals because it's super-fast otherwise. It'll solve it in like 0.1 seconds.
                     Random random = new Random();
                     int minDelay = 1200; // 1.2 seconds in milliseconds
                     int maxDelay = 2300; // 2.3 seconds in milliseconds
