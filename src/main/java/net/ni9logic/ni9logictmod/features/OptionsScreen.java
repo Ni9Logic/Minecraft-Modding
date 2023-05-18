@@ -56,6 +56,35 @@ public class OptionsScreen extends Screen {
 
         this.buttonTooltips.put(this.addDrawableChild(chatMathGame), "Click to start catching Math chat games from chat");
 
+        int Feed_X = this.width / 2 - 65, Feed_Y = this.height / 2;
+
+        ButtonWidget FeedBtn = ButtonWidget.builder(
+                        Text.of(""),
+                        (button) -> {
+                            FeedOwnHunger.isAutoFeed = !FeedOwnHunger.isAutoFeed;
+                            button.setMessage(getAutoFeed(FeedOwnHunger.isAutoFeed));
+                        })
+                .dimensions(Feed_X, Feed_Y - 40, 130, 20)
+                .build();
+
+        FeedBtn.setMessage(getAutoFeed(FeedOwnHunger.isAutoFeed));
+
+        this.buttonTooltips.put(this.addDrawableChild(FeedBtn), "Click to auto feed your player when hunger is low");
+
+        int Fix_X = this.width / 2 - 65, Fix_Y = this.height / 2;
+
+        ButtonWidget FixBtn = ButtonWidget.builder(
+                        Text.of(""),
+                        (button) -> {
+                            FixHandItem.isFixHandItem = !FixHandItem.isFixHandItem;
+                            button.setMessage(getAutoFix(FixHandItem.isFixHandItem));
+                        })
+                .dimensions(Fix_X, Fix_Y - 20, 130, 20)
+                .build();
+
+        FixBtn.setMessage(getAutoFix(FixHandItem.isFixHandItem));
+
+        this.buttonTooltips.put(this.addDrawableChild(FixBtn), "Click to auto fix your player item in hand");
     }
 
     private Text getChatReactionGame(boolean isActive) {
@@ -86,6 +115,36 @@ public class OptionsScreen extends Screen {
                 .setStyle(isActive ? activateStyle : deactivateStyle);
 
         return Text.of("MATH ").copy().append(statusText);
+    }
+
+    private Text getAutoFeed(boolean isActive) {
+        Style activateStyle = Style.EMPTY
+                .withColor(Formatting.DARK_GREEN)
+                .withItalic(true);
+        Style deactivateStyle = Style.EMPTY
+                .withColor(Formatting.DARK_RED)
+                .withItalic(true);
+
+        MutableText statusText = Text.of(isActive ? "[ACTIVATED]" : "[DEACTIVATED]")
+                .copy()
+                .setStyle(isActive ? activateStyle : deactivateStyle);
+
+        return Text.of("FEED ").copy().append(statusText);
+    }
+
+    private Text getAutoFix(boolean isActive) {
+        Style activateStyle = Style.EMPTY
+                .withColor(Formatting.DARK_GREEN)
+                .withItalic(true);
+        Style deactivateStyle = Style.EMPTY
+                .withColor(Formatting.DARK_RED)
+                .withItalic(true);
+
+        MutableText statusText = Text.of(isActive ? "[ACTIVATED]" : "[DEACTIVATED]")
+                .copy()
+                .setStyle(isActive ? activateStyle : deactivateStyle);
+
+        return Text.of("FIX ").copy().append(statusText);
     }
 
     private void renderHelpingTip(MatrixStack stack, Text text) {

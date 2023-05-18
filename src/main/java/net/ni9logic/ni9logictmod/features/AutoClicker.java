@@ -28,11 +28,10 @@ public class AutoClicker {
             Entity entity = ((EntityHitResult) rayTrace).getEntity();
             if (entity instanceof LivingEntity && !(entity instanceof PlayerEntity)) {
                 try {
-                    // Only Attack enemies with locked item in hand
-                    if (LockItemInHand.target_item.equals(LockItemInHand.getItemNameInMainHand())) {
+                    if (LockItemInHand.getItemNameInMainHand().contains("Space L")) {
                         Robot robot = new Robot();
                         Random random = new Random();
-                        int sleepTime = 70 + random.nextInt(450);
+                        int sleepTime = 70 + random.nextInt(300);
                         robot.mousePress(KeyEvent.BUTTON1_DOWN_MASK);
                         robot.mouseRelease(KeyEvent.BUTTON1_DOWN_MASK);
 

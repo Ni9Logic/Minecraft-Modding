@@ -48,10 +48,8 @@ public class LockItemInHand {
         if (isLockItem) {
             assert MinecraftClient.getInstance().player != null;
             PlayerInventory inventory = MinecraftClient.getInstance().player.getInventory();
-            if (!getItemNameInMainHand().equals(target_item)) {
+            if (!getItemNameInMainHand().contains("Space ")) {
                 try {
-                    Thread.sleep(1000);
-
                     for (int slot = 0; slot < inventory.size(); slot++) {
                         ItemStack itemStack = inventory.getStack(slot);
                         if (itemStack.getName().getString().equals(target_item)) {
