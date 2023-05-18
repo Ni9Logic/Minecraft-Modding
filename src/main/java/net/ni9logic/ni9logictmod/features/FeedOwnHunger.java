@@ -11,7 +11,7 @@ public class FeedOwnHunger {
             if (minecraft.player != null) {
                 int myFoodLevel = minecraft.player.getHungerManager().getFoodLevel();
                 if (myFoodLevel <= 8) {
-                    minecraft.player.networkHandler.sendChatCommand("/feed");
+                    minecraft.player.networkHandler.sendChatCommand("feed");
                 }
             }
         }

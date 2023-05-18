@@ -15,7 +15,7 @@ public class FixHandItem {
         if (isFixHandItem) {
             int itemHealth = getItemHealth(heldItem);
             if (itemHealth <= 70) {
-                minecraft.player.networkHandler.sendChatCommand("/fix");
+                minecraft.player.networkHandler.sendChatCommand("fix");
             }
         }
     }
