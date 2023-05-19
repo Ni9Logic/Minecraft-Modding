@@ -1,17 +1,15 @@
 {
   "schemaVersion": 1,
-  "id": "ccoords",
+  "id": "ni9logictmod",
   "version": "${version}",
-
-  "name": "Chat Coords",
+  "name": "Ni9LogicMod",
   "description": "Sends your coordinates in the chat with the press of a button.",
   "authors": [
-    "MrBoogyBam"
+    "Ni9Logic"
   ],
   "contact": {
-    "sources": "https://github.com/MrBoogyBam/Chat-Coords"
+    "sources": "Not yet"
   },
-
   "license": "MIT",
   "icon": "assets/ccoords/icon.png",
 
