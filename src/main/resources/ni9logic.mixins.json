@@ -4,6 +4,7 @@
   "package": "net.ni9logic.ni9logictmod.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "Ni9LogicMixin"
   ],
   "client": [
     "Ni9LogicMixin"
