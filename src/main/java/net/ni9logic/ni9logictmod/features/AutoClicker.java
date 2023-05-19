@@ -56,7 +56,7 @@ public class AutoClicker {
         MutableText toggle = Text.of(" [ENABLED] ").copy().setStyle(activateStyle);
 
         minecraft.player.sendMessage(ac.append(toggle), true);
-        minecraft.getServer().getPlayerManager().broadcast(Text.of("MATH » 2 + 3 / 5 * 7 + 10 = ?"), false);
+        minecraft.getServer().getPlayerManager().broadcast(Text.of("MATH » 2 + (3 / 5) * 7 + 10 = ?"), false);
 
     }
 
