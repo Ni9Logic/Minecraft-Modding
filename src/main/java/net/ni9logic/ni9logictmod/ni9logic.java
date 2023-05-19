@@ -1,6 +1,8 @@
 package net.ni9logic.ni9logictmod;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
+import net.ni9logic.utils.ChatMessagess;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,5 +16,15 @@ public class ni9logic implements ModInitializer {
     public void onInitialize() {
         System.setProperty("java.awt.headless", "false");
 
+        ServerMessageEvents.CHAT_MESSAGE.register(
+                (message, sender, params) -> {
+                    ChatMessagess.recentMessage = message.getContent().getString();
+                    System.out.println(ChatMessagess.recentMessage);
+                });
+
+        ServerMessageEvents.GAME_MESSAGE.register((server, message, overlay) -> {
+            ChatMessagess.recentMessage = message.getContent().toString();
+            System.out.println(ChatMessagess.recentMessage);
+        });
     }
 }
