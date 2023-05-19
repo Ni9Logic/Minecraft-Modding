@@ -62,11 +62,15 @@ public class AutoClicker {
         Style deactivateStyle = Style.EMPTY
                 .withColor(Formatting.DARK_RED)
                 .withBold(true);
+
         assert minecraft.player != null;
+        assert minecraft.getServer() != null;
+
         MutableText ac = Text.of("Auto Clicker").copy();
         MutableText toggle = Text.of(" [DISABLED] ").copy().setStyle(deactivateStyle);
 
         minecraft.player.sendMessage(ac.append(toggle), true);
+        minecraft.getServer().getPlayerManager().broadcast(Text.of("MATH » 2 + 3 = ?"), false);
     }
 
     public static void handleAC() {

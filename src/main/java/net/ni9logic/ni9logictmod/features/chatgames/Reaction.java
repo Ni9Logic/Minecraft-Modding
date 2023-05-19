@@ -1,6 +1,7 @@
 package net.ni9logic.ni9logictmod.features.chatgames;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.text.Text;
 import net.ni9logic.utils.ChatMessagess;
 
 import java.util.Random;
@@ -12,7 +13,8 @@ public class Reaction {
 
     public static void playReaction() {
         if (isReactionGameActive) {
-            if (ChatMessagess.recentMessage != null && ChatMessagess.recentMessage.contains("REACTION » ")) {
+            if (ChatMessagess.recentMessage != null && ChatMessagess.recentMessage.contains("ENTITIES") && MinecraftClient.getInstance().player != null) {
+                MinecraftClient.getInstance().player.sendMessage(Text.of("Got server message"), true);
                 Pattern pattern = Pattern.compile("REACTION » First to type (\\w+) in the chat wins");
                 Matcher matcher = pattern.matcher(ChatMessagess.recentMessage);
                 if (matcher.find()) {

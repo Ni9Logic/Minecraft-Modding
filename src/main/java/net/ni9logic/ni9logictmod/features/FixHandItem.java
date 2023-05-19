@@ -16,6 +16,13 @@ public class FixHandItem {
             int itemHealth = getItemHealth(heldItem);
             if (itemHealth <= 70) {
                 minecraft.player.networkHandler.sendChatCommand("fix");
+
+                // Give a gap because it will spam otherwise
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }

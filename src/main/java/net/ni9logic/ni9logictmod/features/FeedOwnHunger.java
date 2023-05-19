@@ -12,6 +12,13 @@ public class FeedOwnHunger {
                 int myFoodLevel = minecraft.player.getHungerManager().getFoodLevel();
                 if (myFoodLevel <= 8) {
                     minecraft.player.networkHandler.sendChatCommand("feed");
+
+                    // Give a gap because it will spam otherwise
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         }
