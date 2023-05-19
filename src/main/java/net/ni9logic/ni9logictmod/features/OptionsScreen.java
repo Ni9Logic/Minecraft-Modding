@@ -181,7 +181,7 @@ public class OptionsScreen extends Screen {
 
 
         for (ButtonWidget button : buttonTooltips.keySet()) {
-            if (button.isSelected()) {
+            if (button.active) {
                 this.renderHelpingTip(matrices, Text.translatable(this.buttonTooltips.get(button)));
             }
         }

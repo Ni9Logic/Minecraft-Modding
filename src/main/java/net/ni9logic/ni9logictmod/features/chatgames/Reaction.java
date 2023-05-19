@@ -17,7 +17,6 @@ public class Reaction {
                 Matcher matcher = pattern.matcher(ChatMessagess.recentMessage);
                 if (matcher.find()) {
                     String word = matcher.group(1);
-
                     // Sends the words as soon as it gets it
                     assert MinecraftClient.getInstance().player != null;
 
