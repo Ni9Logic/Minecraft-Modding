@@ -7,9 +7,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.ni9logic.utils.ChatMessagess;
 import net.ni9logic.utils.MathEval;
+import net.ni9logic.utils.StopWatch;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,25 +31,16 @@ public class Maths {
 
                     while (true) {
                         assert MinecraftClient.getInstance().player != null;
-                        long currentTime = System.currentTimeMillis();
-                        long elapsedTimeMillis = currentTime - startTime;
 
-                        //Style
-                        Style timer = Style.EMPTY
-                                .withBold(true);
 
                         Style timer_up = Style.EMPTY
                                 .withColor(Formatting.DARK_RED)
                                 .withBold(true);
 
-                        // Convert elapsed time to the desired format
-                        long elapsedMilliseconds = elapsedTimeMillis % 1000;
-                        long elapsedSeconds = TimeUnit.MILLISECONDS.toSeconds(elapsedTimeMillis);
-                        minecraft.player.sendMessage(Text.of(String.format("TIMER: %d.%03d", elapsedSeconds, elapsedMilliseconds))
-                                .copy().setStyle(timer), true);
+                        StopWatch.myTimer("TIMER", startTime);
 
 
-                        if (elapsedSeconds >= 10) {
+                        if (StopWatch.elapsedSeconds >= 10) {
                             MinecraftClient.getInstance().player.sendMessage(Text.of("Time up!").copy().setStyle(timer_up), true);
                             break;
                         }
