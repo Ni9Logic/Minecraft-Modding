@@ -70,7 +70,6 @@ public class AutoClicker {
         MutableText toggle = Text.of(" [DISABLED] ").copy().setStyle(deactivateStyle);
 
         minecraft.player.sendMessage(ac.append(toggle), true);
-        minecraft.getServer().getPlayerManager().broadcast(Text.of("MATH » 2 + 3 = ?"), false);
     }
 
     public static void handleAC() {

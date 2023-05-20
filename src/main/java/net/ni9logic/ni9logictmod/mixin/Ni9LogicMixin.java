@@ -9,13 +9,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPlayNetworkHandler.class)
 public class Ni9LogicMixin {
-
-    // Commenting this code for testing purposes
+    // Commented for testing purposes
 //    @Inject(method = "onGameMessage", at = @At("HEAD"))
-//    private void onChatMessage(GameMessageS2CPacket packet, CallbackInfo ci) {
+//    private void onGameMessage(GameMessageS2CPacket packet, CallbackInfo ci) {
+//        assert MinecraftClient.getInstance().player != null;
 //        Text Message = packet.content();
 //        if (Message != null) {
 //            ChatMessagess.recentMessage = Message.getString();
+//            MinecraftClient.getInstance().player.sendMessage(Text.of(ChatMessagess.recentMessage));
 //            System.out.println(ChatMessagess.recentMessage);
 //        }
 //    }
