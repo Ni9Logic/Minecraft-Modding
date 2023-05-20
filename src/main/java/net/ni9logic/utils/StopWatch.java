@@ -10,7 +10,7 @@ import static net.ni9logic.ni9logictmod.Ni9LogicMod.minecraft;
 public class StopWatch {
     public static long elapsedSeconds;
 
-    public static void myTimer(String Message, long startTime) {
+    public static void myTimer(String timerTitle, long startTime) {
         //Style
         Style timer = Style.EMPTY
                 .withBold(true);
@@ -22,7 +22,7 @@ public class StopWatch {
         elapsedSeconds = TimeUnit.MILLISECONDS.toSeconds(elapsedTimeMillis);
 
         assert minecraft.player != null;
-        minecraft.player.sendMessage(Text.of(String.format("%s: %d.%04d", Message, elapsedSeconds, elapsedMilliseconds))
+        minecraft.player.sendMessage(Text.of(String.format("%s: %d.%04d", timerTitle, elapsedSeconds, elapsedMilliseconds))
                 .copy().setStyle(timer), true);
     }
 }
