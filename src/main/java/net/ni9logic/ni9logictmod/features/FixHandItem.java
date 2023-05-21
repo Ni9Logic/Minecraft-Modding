@@ -12,7 +12,7 @@ public class FixHandItem {
         assert minecraft.player != null;
         ItemStack heldItem = minecraft.player.getStackInHand(Hand.MAIN_HAND);
         // Perform operations with the held item as needed
-        if (isFixHandItem) {
+        if (isFixHandItem && heldItem.isDamageable()) {
             int itemHealth = getItemHealth(heldItem);
             if (itemHealth <= 70) {
                 minecraft.player.networkHandler.sendChatCommand("fix");
