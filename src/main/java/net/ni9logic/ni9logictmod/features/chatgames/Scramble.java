@@ -1,5 +1,6 @@
 package net.ni9logic.ni9logictmod.features.chatgames;
 
+import net.ni9logic.ni9logictmod.ni9logic;
 import net.ni9logic.utils.sendAnswer;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.util.regex.Pattern;
 public class Scramble {
     public static boolean isScrambleGameActive = true;
     private static final Map<String, String> UnscrambleScramble = new HashMap<>();
+    private static final String PATHH = "C:\\Users\\Rakhman Gul\\Desktop\\Chat-Coords-main\\src\\main\\java\\net\\ni9logic\\ni9logictmod\\features\\chatgames\\utils\\scramble-data.txt";
 
     private static String Unscramble;
 
@@ -26,6 +28,7 @@ public class Scramble {
             Matcher matcher = pattern.matcher(message);
 
             if (matcher.find()) {
+                ni9logic.LOGGER.info("SCRAMBLE-GAME - Scramble Game Found heading towards input method");
                 Unscramble = matcher.group(1);
                 if (UnscrambleScramble.containsKey(Unscramble)) {
                     sendAnswer.inputAnswer(Unscramble);
@@ -39,8 +42,9 @@ public class Scramble {
             }
 
             Pattern answerPattern = Pattern.compile("SCRAMBLE » The answer was (\\w+)");
-            matcher = pattern.matcher(message);
+            matcher = answerPattern.matcher(message);
             if (matcher.find() && !UnscrambleScramble.containsKey(Unscramble)) {
+                ni9logic.LOGGER.info("SCRAMBLE-GAME - Scramble game word was not found in scramble-data.txt hence adding...");
                 String Scramble = matcher.group(1);
                 addUnscrambleScramble(Unscramble, Scramble);
             }
@@ -48,8 +52,9 @@ public class Scramble {
     }
 
     public static void readyMap() {
+        ni9logic.LOGGER.info("SCRAMBLE-GAME - Extracting data from scramble-data.txt into the hashmap...");
         // Path to our data
-        Path path = Paths.get("src/net/ni9logic/ni9logictmod/features/chatgames/utils/scrmable-data.txt");
+        Path path = Paths.get(PATHH);
 
         try {
             // Reading all the lines from the file
@@ -71,7 +76,8 @@ public class Scramble {
     }
 
     public static void addUnscrambleScramble(String Unscramble, String Scramble) {
-        Path path = Paths.get("src/net/ni9logic/ni9logictmod/features/chatgames/utils/trivia-data.txt");
+        ni9logic.LOGGER.info("SCRAMBLE-GAME - Adding the question and the answer into the text file as well as into the hashmap");
+        Path path = Paths.get(PATHH);
 
         // Appending the new question and answer to the file
         try {

@@ -1,6 +1,7 @@
 package net.ni9logic.ni9logictmod.features.chatgames;
 
 import net.minecraft.client.MinecraftClient;
+import net.ni9logic.ni9logictmod.ni9logic;
 import net.ni9logic.utils.MathEval;
 import net.ni9logic.utils.sendAnswer;
 
@@ -18,6 +19,7 @@ public class Maths {
             Pattern pattern = Pattern.compile("MATH » (.*) = \\?");
             Matcher matcher = pattern.matcher(message);
             if (matcher.find()) {
+                ni9logic.LOGGER.info("MATH-GAME - Math game found in the cat... heading towards input method");
                 String mathAnswer = String.valueOf(getRes(matcher.group(1))); // This directly extracts our answer from the expression
 
                 // Sending Answer

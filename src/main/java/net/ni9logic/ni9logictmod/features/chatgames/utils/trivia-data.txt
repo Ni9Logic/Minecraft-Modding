@@ -22,7 +22,7 @@ What is the third Zodiac sign?:gemini
 What was the first state in the United States of America?:delaware
 What are Eenderman afraid of?:water
 What are Creepers scared of?:ocelots
-What is the worlds longest river?:nile
+What is the worlds longest river?:nkile
 What can be created from 4 iron blocks and a pumpkin?:iron
 What can be fed to a parrot to kill it instantly?:cookie
 How many hearts does a squid have?:3
@@ -36,3 +36,4 @@ What can be crafted from 2 snow blocks and a pumpkin?:snow golem
 Who owns OPB?:saito
 What ingredient is needed to make a potion of swiftness?:sugar
 How many timezones are there in the world?:24
+What are creepers petrified of?:cat

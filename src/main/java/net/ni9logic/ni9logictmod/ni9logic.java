@@ -23,7 +23,6 @@ public class ni9logic implements ModInitializer {
         assert MinecraftClient.getInstance().player != null;
         Trivia.readyMap();
         Scramble.readyMap();
-
         // Register event handlers for the ClientReceiveMessageEvents
         ClientReceiveMessageEvents.MODIFY_GAME.register((message, overlay) -> {
             // Modify the received game message
