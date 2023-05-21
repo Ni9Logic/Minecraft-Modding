@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 public class Ni9LogicMod implements ClientModInitializer {
     public static final MinecraftClient minecraft = MinecraftClient.getInstance();
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor1 = Executors.newSingleThreadExecutor();
 
 
     @Override
@@ -38,10 +39,9 @@ public class Ni9LogicMod implements ClientModInitializer {
             executor.submit(this::handleTeleportDetect);
             executor.submit(this::handleAutoClicker);
             executor.submit(this::handleRotationDetect);
-            executor.submit(this::handleGUI);
-            executor.submit(this::handleChatGames);
-            executor.submit(this::handleHunger);
-            executor.submit(this::handleFixingHandItem);
+            executor1.submit(this::handleGUI);
+            executor1.submit(this::handleHunger);
+            executor1.submit(this::handleFixingHandItem);
         });
     }
 
@@ -65,10 +65,6 @@ public class Ni9LogicMod implements ClientModInitializer {
         while (OptionsScreen.KEY_CHAT_GAMES.wasPressed()) {
             minecraft.execute(() -> minecraft.setScreen(new OptionsScreen()));
         }
-    }
-
-    public void handleChatGames() {
-        chatGames.playChatGames();
     }
 
     public void handleHunger() {
