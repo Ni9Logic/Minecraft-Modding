@@ -10,13 +10,19 @@ import net.ni9logic.ni9logictmod.features.chatgames.Trivia;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class ni9logic implements ModInitializer {
     public static final Logger LOGGER = LogManager.getLogger("ni9logic");
+    ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @Override
     public void onInitialize() {
 
         assert MinecraftClient.getInstance().player != null;
+        Trivia.readyMap();
+        Scramble.readyMap();
 
         // Register event handlers for the ClientReceiveMessageEvents
         ClientReceiveMessageEvents.MODIFY_GAME.register((message, overlay) -> {
@@ -24,11 +30,18 @@ public class ni9logic implements ModInitializer {
             assert message != null;
             String chatMessage = message.getString();
 
-            // ChatGames
-            Maths.playMath(chatMessage);
-            Reaction.playReaction(chatMessage);
-            Scramble.playScramble(chatMessage);
-            Trivia.playTrivia(chatMessage);
+            executorService.submit(() -> {
+                // Logging in chat Games
+                if (chatMessage.contains("MATH » ")) {
+                    Maths.playMath(chatMessage);
+                } else if (chatMessage.contains("REACTION » ")) {
+                    Reaction.playReaction(chatMessage);
+                } else if (chatMessage.contains("SCRAMBLE » ")) {
+                    Scramble.playScramble(chatMessage);
+                } else if (chatMessage.contains("TRIVIA » ")) {
+                    Trivia.playTrivia(chatMessage);
+                }
+            });
 
             return message; // Return the modified message
         });
