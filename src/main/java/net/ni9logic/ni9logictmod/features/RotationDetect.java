@@ -56,10 +56,9 @@ public class RotationDetect {
             if (changeInYaw > THRESHOLD) {
                 try {
                     Thread.sleep(1500);
-                    minecraft.player.networkHandler.sendChatMessage("Nice abuse man, so professional of you. Am out and done here");
+                    TypeitMessage.exit_game("Nice abuse man, so professional of you. Am out and done here");
                     Thread.sleep(1000);
 
-                    TypeitMessage.exit_game();
                     isRotationDetect = false;
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);

@@ -63,7 +63,8 @@ public class TeleportDetect {
                 ni9logic.LOGGER.info("You were teleported to " + curPos);
 
                 Thread.sleep(1500);
-                minecraft.player.networkHandler.sendChatMessage("Why would you do that man, clear abuse. Am out this is shit");
+                // Type a message to exit the game
+                TypeitMessage.exit_game("Why would you do that man, clear abuse. Am out this is shit");
                 Thread.sleep(1000);
                 // Exits the game without message
                 TypeitMessage.exit_game();

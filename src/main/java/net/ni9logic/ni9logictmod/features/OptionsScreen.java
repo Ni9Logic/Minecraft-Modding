@@ -38,7 +38,7 @@ public class OptionsScreen extends Screen {
 
         chatGamesbtn.setMessage(getChatGameBtnStatus(chatGames)); // Set initial button text
 
-        this.buttonTooltips.put(this.addDrawableChild(chatGamesbtn), "Click to start catching Reaction chat games from chat");
+        this.buttonTooltips.put(this.addDrawableChild(chatGamesbtn), "Start auto solving chat games");
 
         int Feed_X = this.width / 2 - 65, Feed_Y = this.height / 2;
 
@@ -83,7 +83,7 @@ public class OptionsScreen extends Screen {
                 .copy()
                 .setStyle(isActive ? activateStyle : deactivateStyle);
 
-        return Text.of("REACTION ").copy().append(statusText);
+        return Text.of("ChatGames ").copy().append(statusText);
     }
 
     private Text getAutoFeed(boolean isActive) {
