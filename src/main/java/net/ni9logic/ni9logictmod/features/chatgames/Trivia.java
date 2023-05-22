@@ -22,32 +22,35 @@ public class Trivia {
 
     public static void playTrivia(String message) {
         if (isTriviaGameActive) {
-            Pattern pattern = Pattern.compile("TRIVIA » (.*)");
-            Matcher matcher = pattern.matcher(message);
+            if (message.contains("TRIVIA » ") && !message.contains("TRIVIA » The answer ") && !message.contains("won the game")) {
+                Pattern pattern = Pattern.compile("TRIVIA » (.*)");
+                Matcher matcher = pattern.matcher(message);
+
+                if (matcher.find()) {
+                    ni9logic.LOGGER.info("TRIVIA-GAME - Trivia Game Found heading towards input method...");
+                    question = matcher.group(1);
+                    if (questionAnswer.containsKey(question)) {
+                        sendAnswer.inputAnswer(questionAnswer.get(question)); // Basically this is our answer to trivia if its present inside the hashmap
+                    }
+                }
+            } else if (message.contains("TRIVIA » The answer ")) {
+                addAnswer(message);
+            }
+        }
+    }
+
+    public static void addAnswer(String message) {
+
+        if (!questionAnswer.containsKey(question)) {
+            Pattern answerPattern = Pattern.compile("TRIVIA » The answer was (\\w+)");
+            Matcher matcher = answerPattern.matcher(message);
 
             if (matcher.find()) {
-                ni9logic.LOGGER.info("TRIVIA-GAME - Trivia Game Found heading towards input method...");
-                question = matcher.group(1);
-                if (questionAnswer.containsKey(question)) {
-                    sendAnswer.inputAnswer(questionAnswer.get(question)); // Basically this is our answer to trivia if its present inside the hashmap
-                }
-            }
-
-            // Wait for the answer && sleep for 20 seconds to get the answer
-            try {
-                Thread.sleep(20000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-            Pattern answerPattern = Pattern.compile("TRIVIA » The answer was (\\w+)");
-            matcher = answerPattern.matcher(message);
-
-            if (matcher.find() && !questionAnswer.containsKey(question)) {
-                ni9logic.LOGGER.info("TRIVIA-GAME - Answer was found");
+                ni9logic.LOGGER.info("TRIVIA-GAME - Found answer for the trivia and the question was also not found in hashmap");
                 String answer = matcher.group(1);
                 // This updates the file and the hashmap as well for next
                 addQuestionAnswer(question, answer);
+                ni9logic.LOGGER.info("Added the answer in the hashmap");
             }
         }
     }

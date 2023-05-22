@@ -30,7 +30,7 @@ public class sendAnswer {
                 break;
             }
 
-            if (KeyboardUtils.isPressed(GLFW.GLFW_KEY_P)) {
+            if (KeyboardUtils.isPressed(GLFW.GLFW_KEY_I)) {
                 ni9logic.LOGGER.info("INPUT ANSWER - The user pressed P");
                 MinecraftClient.getInstance().player.networkHandler.sendChatMessage(answer);
 

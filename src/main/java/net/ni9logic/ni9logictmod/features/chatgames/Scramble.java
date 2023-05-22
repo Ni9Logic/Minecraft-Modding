@@ -24,30 +24,32 @@ public class Scramble {
 
     public static void playScramble(String message) {
         if (isScrambleGameActive) {
-            Pattern pattern = Pattern.compile("SCRAMBLE » Unscramble the word (\\w+) to win");
-            Matcher matcher = pattern.matcher(message);
+            if (message.contains("SCRAMBLE » ") && !message.contains("SCRAMBLE » The answer ") && !message.contains("won the game")) {
+                Pattern pattern = Pattern.compile("SCRAMBLE » Unscramble the word (\\w+) to win");
+                Matcher matcher = pattern.matcher(message);
 
-            if (matcher.find()) {
-                ni9logic.LOGGER.info("SCRAMBLE-GAME - Scramble Game Found heading towards input method");
-                Unscramble = matcher.group(1);
-                if (UnscrambleScramble.containsKey(Unscramble)) {
-                    sendAnswer.inputAnswer(Unscramble);
+                if (matcher.find()) {
+                    ni9logic.LOGGER.info("SCRAMBLE-GAME - Scramble Game Found heading towards input method");
+                    Unscramble = matcher.group(1);
+                    if (UnscrambleScramble.containsKey(Unscramble)) {
+                        sendAnswer.inputAnswer(Unscramble);
+                    }
                 }
+            } else if (message.contains("SCRAMBLE » The answer ")) {
+                addUnscrambleScramble(message);
             }
+        }
+    }
 
-            try {
-                Thread.sleep(20000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-            Pattern answerPattern = Pattern.compile("SCRAMBLE » The answer was (\\w+)");
-            matcher = answerPattern.matcher(message);
-            if (matcher.find() && !UnscrambleScramble.containsKey(Unscramble)) {
-                ni9logic.LOGGER.info("SCRAMBLE-GAME - Scramble game word was not found in scramble-data.txt hence adding...");
-                String Scramble = matcher.group(1);
-                addUnscrambleScramble(Unscramble, Scramble);
-            }
+    public static void addUnscrambleScramble(String message) {
+        ni9logic.LOGGER.info("SCRAMBLE-GAME - Found answer for the scramble and the question was also not found in hashmap");
+        Pattern answerPattern = Pattern.compile("SCRAMBLE » The answer was (\\w+)");
+        Matcher matcher = answerPattern.matcher(message);
+        if (matcher.find() && !UnscrambleScramble.containsKey(Unscramble)) {
+            ni9logic.LOGGER.info("SCRAMBLE-GAME - Scramble game word was not found in scramble-data.txt hence adding...");
+            String Scramble = matcher.group(1);
+            addUnscrambleScramble(Unscramble, Scramble);
+            ni9logic.LOGGER.info("Added the answer in the hashmap");
         }
     }
 

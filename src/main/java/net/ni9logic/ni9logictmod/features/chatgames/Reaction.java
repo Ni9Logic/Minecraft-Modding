@@ -11,14 +11,16 @@ public class Reaction {
 
     public static void playReaction(String message) {
         if (isReactionGameActive) {
-            Pattern pattern = Pattern.compile("REACTION » First to type (\\w+) in the chat wins");
-            Matcher matcher = pattern.matcher(message);
-            if (matcher.find()) {
-                ni9logic.LOGGER.info("REACTION-GAME - Found, moving towards input method...");
-                String word = matcher.group(1);
+            if (message.contains("REACTION » ") && !message.contains("REACTION » The answer ") && !message.contains("won the game")) {
+                Pattern pattern = Pattern.compile("REACTION » First to type (\\w+) in the chat wins");
+                Matcher matcher = pattern.matcher(message);
+                if (matcher.find()) {
+                    ni9logic.LOGGER.info("REACTION-GAME - Found, moving towards input method...");
+                    String word = matcher.group(1);
 
-                // Sends the words as soon as user presses p
-                sendAnswer.inputAnswer(word);
+                    // Sends the words as soon as user presses p
+                    sendAnswer.inputAnswer(word);
+                }
             }
         }
     }

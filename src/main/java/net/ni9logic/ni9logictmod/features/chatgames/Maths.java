@@ -16,14 +16,16 @@ public class Maths {
         assert minecraft.player != null;
 
         if (isMathGameActive) {
-            Pattern pattern = Pattern.compile("MATH » (.*) = \\?");
-            Matcher matcher = pattern.matcher(message);
-            if (matcher.find()) {
-                ni9logic.LOGGER.info("MATH-GAME - Math game found in the cat... heading towards input method");
-                String mathAnswer = String.valueOf(getRes(matcher.group(1))); // This directly extracts our answer from the expression
+            if (message.contains("MATH » ") && !message.contains("MATH » The answer ") && !message.contains("won the game")) {
+                Pattern pattern = Pattern.compile("MATH » (.*) = \\?");
+                Matcher matcher = pattern.matcher(message);
+                if (matcher.find()) {
+                    ni9logic.LOGGER.info("MATH-GAME - Math game found in the cat... heading towards input method");
+                    String mathAnswer = String.valueOf(getRes(matcher.group(1))); // This directly extracts our answer from the expression
 
-                // Sending Answer
-                sendAnswer.inputAnswer(mathAnswer);
+                    // Sending Answer
+                    sendAnswer.inputAnswer(mathAnswer);
+                }
             }
         }
     }

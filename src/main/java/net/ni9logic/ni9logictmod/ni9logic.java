@@ -27,19 +27,13 @@ public class ni9logic implements ModInitializer {
         ClientReceiveMessageEvents.MODIFY_GAME.register((message, overlay) -> {
             // Modify the received game message
             assert message != null;
-            String chatMessage = message.getString();
 
+            // Executing chat games in another thread so that they won't hang the whole minecraft
             executorService.submit(() -> {
-                // Logging in chat Games
-                if (chatMessage.contains("MATH » ")) {
-                    Maths.playMath(chatMessage);
-                } else if (chatMessage.contains("REACTION » ")) {
-                    Reaction.playReaction(chatMessage);
-                } else if (chatMessage.contains("SCRAMBLE » ")) {
-                    Scramble.playScramble(chatMessage);
-                } else if (chatMessage.contains("TRIVIA » ")) {
-                    Trivia.playTrivia(chatMessage);
-                }
+                Maths.playMath(message.getString());
+                Trivia.playTrivia(message.getString());
+                Reaction.playReaction(message.getString());
+                Scramble.playScramble(message.getString());
             });
 
             return message; // Return the modified message
