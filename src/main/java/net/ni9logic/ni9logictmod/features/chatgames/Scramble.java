@@ -14,8 +14,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static net.ni9logic.ni9logictmod.features.OptionsScreen.chatGames;
+
 public class Scramble {
-    public static boolean isScrambleGameActive = true;
     private static final Map<String, String> UnscrambleScramble = new HashMap<>();
     private static final String PATHH = "C:\\Users\\Rakhman Gul\\Desktop\\Chat-Coords-main\\src\\main\\java\\net\\ni9logic\\ni9logictmod\\features\\chatgames\\utils\\scramble-data.txt";
 
@@ -23,7 +24,7 @@ public class Scramble {
 
 
     public static void playScramble(String message) {
-        if (isScrambleGameActive) {
+        if (chatGames) {
             if (message.contains("SCRAMBLE » ") && !message.contains("SCRAMBLE » The answer ") && !message.contains("won the game")) {
                 Pattern pattern = Pattern.compile("SCRAMBLE » Unscramble the word (\\w+) to win");
                 Matcher matcher = pattern.matcher(message);

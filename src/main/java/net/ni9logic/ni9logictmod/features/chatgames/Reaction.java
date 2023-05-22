@@ -6,11 +6,12 @@ import net.ni9logic.utils.sendAnswer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static net.ni9logic.ni9logictmod.features.OptionsScreen.chatGames;
+
 public class Reaction {
-    public static boolean isReactionGameActive = false;
 
     public static void playReaction(String message) {
-        if (isReactionGameActive) {
+        if (chatGames) {
             if (message.contains("REACTION » ") && !message.contains("REACTION » The answer ") && !message.contains("won the game")) {
                 Pattern pattern = Pattern.compile("REACTION » First to type (\\w+) in the chat wins");
                 Matcher matcher = pattern.matcher(message);

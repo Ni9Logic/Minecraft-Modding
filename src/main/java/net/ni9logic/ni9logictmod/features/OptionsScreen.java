@@ -10,14 +10,13 @@ import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.ni9logic.ni9logictmod.features.chatgames.Maths;
-import net.ni9logic.ni9logictmod.features.chatgames.Reaction;
 
 import java.util.HashMap;
 
 public class OptionsScreen extends Screen {
     public static KeyBinding KEY_CHAT_GAMES;
     private final HashMap<ButtonWidget, String> buttonTooltips = new HashMap<>();
+    public static boolean chatGames = false;
 
     public OptionsScreen() {
         super(Text.empty());
@@ -28,33 +27,18 @@ public class OptionsScreen extends Screen {
 
         int ReactionGame_X = this.width / 2 - 65, ReactionGame_Y = this.height / 2;
 
-        ButtonWidget chatReactionGame = ButtonWidget.builder(
+        ButtonWidget chatGamesbtn = ButtonWidget.builder(
                         Text.of(""), // Initial empty button text
                         (button) -> {
-                            Reaction.isReactionGameActive = !Reaction.isReactionGameActive;
-                            button.setMessage(getChatReactionGame(Reaction.isReactionGameActive)); // Set button text based on the current state
+                            chatGames = !chatGames;
+                            button.setMessage(getChatGameBtnStatus(chatGames)); // Set button text based on the current state
                         })
                 .dimensions(ReactionGame_X, ReactionGame_Y - 60, 130, 20)
                 .build();
 
-        chatReactionGame.setMessage(getChatReactionGame(Reaction.isReactionGameActive)); // Set initial button text
+        chatGamesbtn.setMessage(getChatGameBtnStatus(chatGames)); // Set initial button text
 
-        this.buttonTooltips.put(this.addDrawableChild(chatReactionGame), "Click to start catching Reaction chat games from chat");
-
-        int MathGame_X = this.width / 2 - 65, MathGame_Y = this.height / 2;
-
-        ButtonWidget chatMathGame = ButtonWidget.builder(
-                        Text.of(""), // Initial empty button text
-                        (button) -> {
-                            Maths.isMathGameActive = !Maths.isMathGameActive;
-                            button.setMessage(getChatMathGame(Maths.isMathGameActive)); // Set button text based on the current state
-                        })
-                .dimensions(MathGame_X, MathGame_Y - 80, 130, 20)
-                .build();
-
-        chatMathGame.setMessage(getChatMathGame(Maths.isMathGameActive)); // Set initial button text
-
-        this.buttonTooltips.put(this.addDrawableChild(chatMathGame), "Click to start catching Math chat games from chat");
+        this.buttonTooltips.put(this.addDrawableChild(chatGamesbtn), "Click to start catching Reaction chat games from chat");
 
         int Feed_X = this.width / 2 - 65, Feed_Y = this.height / 2;
 
@@ -87,7 +71,7 @@ public class OptionsScreen extends Screen {
         this.buttonTooltips.put(this.addDrawableChild(FixBtn), "Click to auto fix your player item in hand");
     }
 
-    private Text getChatReactionGame(boolean isActive) {
+    private Text getChatGameBtnStatus(boolean isActive) {
         Style activateStyle = Style.EMPTY
                 .withColor(Formatting.DARK_GREEN)
                 .withItalic(true);
@@ -100,21 +84,6 @@ public class OptionsScreen extends Screen {
                 .setStyle(isActive ? activateStyle : deactivateStyle);
 
         return Text.of("REACTION ").copy().append(statusText);
-    }
-
-    private Text getChatMathGame(boolean isActive) {
-        Style activateStyle = Style.EMPTY
-                .withColor(Formatting.DARK_GREEN)
-                .withItalic(true);
-        Style deactivateStyle = Style.EMPTY
-                .withColor(Formatting.DARK_RED)
-                .withItalic(true);
-
-        MutableText statusText = Text.of(isActive ? "[ACTIVATED]" : "[DEACTIVATED]")
-                .copy()
-                .setStyle(isActive ? activateStyle : deactivateStyle);
-
-        return Text.of("MATH ").copy().append(statusText);
     }
 
     private Text getAutoFeed(boolean isActive) {

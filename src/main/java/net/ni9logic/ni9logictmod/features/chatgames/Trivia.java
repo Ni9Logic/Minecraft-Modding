@@ -14,14 +14,15 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static net.ni9logic.ni9logictmod.features.OptionsScreen.chatGames;
+
 public class Trivia {
-    public static boolean isTriviaGameActive = true;
     private static final Map<String, String> questionAnswer = new HashMap<>();
     private static final String PATHH = "C:\\Users\\Rakhman Gul\\Desktop\\Chat-Coords-main\\src\\main\\java\\net\\ni9logic\\ni9logictmod\\features\\chatgames\\utils\\trivia-data.txt";
     private static String question;
 
     public static void playTrivia(String message) {
-        if (isTriviaGameActive) {
+        if (chatGames) {
             if (message.contains("TRIVIA » ") && !message.contains("TRIVIA » The answer ") && !message.contains("won the game")) {
                 Pattern pattern = Pattern.compile("TRIVIA » (.*)");
                 Matcher matcher = pattern.matcher(message);

@@ -62,3 +62,4 @@ tiweh:white
 iekhncc:chicken
 rnipso:prison
 tprbasatele:breastplate
+psrwena:spawner
