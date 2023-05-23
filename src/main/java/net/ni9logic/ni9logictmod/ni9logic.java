@@ -45,6 +45,10 @@ public class ni9logic implements ModInitializer {
         {
             assert message != null;
             System.out.println("Chat-Game: " + message.getString());
+            executorService.submit(() -> {
+                Maths.playMath(message.getString());
+                Reaction.playReaction(message.getString());
+            });
         }));
         System.setProperty("java.awt.headless", "false");
     }

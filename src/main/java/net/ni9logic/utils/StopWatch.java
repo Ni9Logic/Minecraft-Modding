@@ -9,6 +9,7 @@ import static net.ni9logic.ni9logictmod.Ni9LogicMod.minecraft;
 
 public class StopWatch {
     public static long elapsedSeconds;
+    public static long elapsedMilliseconds;
 
     public static void myTimer(String timerTitle, long startTime) {
         //Style
@@ -18,7 +19,7 @@ public class StopWatch {
         // Convert elapsed time to the desired format
         long currentTime = System.currentTimeMillis();
         long elapsedTimeMillis = currentTime - startTime;
-        long elapsedMilliseconds = elapsedTimeMillis % 1000;
+        elapsedMilliseconds = elapsedTimeMillis % 1000;
         elapsedSeconds = TimeUnit.MILLISECONDS.toSeconds(elapsedTimeMillis);
 
         assert minecraft.player != null;
