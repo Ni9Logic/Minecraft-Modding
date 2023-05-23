@@ -19,6 +19,7 @@ public class AutoReply {
                     String personName = matcher.group(1);
                     ni9logic.LOGGER.info("AUTO-REPLY - PM FOUND! Data Extracted & Person name is: " + personName);
                     TypeitMessage.exit_game("/r " + personName + ", ??");
+                    message = "";
                 } else {
                     ni9logic.LOGGER.info("AUTO-REPLY - PM FOUND! but data couldn't be extracted");
                 }
