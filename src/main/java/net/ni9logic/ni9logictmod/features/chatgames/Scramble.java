@@ -30,32 +30,31 @@ public class Scramble {
                 Matcher matcher = pattern.matcher(message);
 
                 if (matcher.find()) {
-                    ni9logic.LOGGER.info("SCRAMBLE-GAME - Scramble Game Found heading towards input method");
+                    ni9logic.LOGGER.warn("[SCRAMBLE-GAME] » Word detected, checking the word inside text file");
                     Unscramble = matcher.group(1);
                     if (UnscrambleScramble.containsKey(Unscramble)) {
+                        ni9logic.LOGGER.warn("[SCRAMBLE-GAME] » Word found inside text file");
                         sendAnswer.inputAnswer(Unscramble);
                     }
                 }
             } else if (message.contains("SCRAMBLE » The answer ")) {
+                ni9logic.LOGGER.warn("[SCRAMBLE-GAME] » Word not found inside text file, hence adding the answer and the word in text file");
                 addUnscrambleScramble(message);
             }
         }
     }
 
     public static void addUnscrambleScramble(String message) {
-        ni9logic.LOGGER.info("SCRAMBLE-GAME - Found answer for the scramble and the question was also not found in hashmap");
         Pattern answerPattern = Pattern.compile("SCRAMBLE » The answer was (\\w+)");
         Matcher matcher = answerPattern.matcher(message);
         if (matcher.find() && !UnscrambleScramble.containsKey(Unscramble)) {
-            ni9logic.LOGGER.info("SCRAMBLE-GAME - Scramble game word was not found in scramble-data.txt hence adding...");
+            ni9logic.LOGGER.warn("[SCRAMBLE-GAME] » Answer detected but the answer is not present in the text file");
             String Scramble = matcher.group(1);
-            addUnscrambleScramble(Unscramble, Scramble);
-            ni9logic.LOGGER.info("Added the answer in the hashmap");
+            updateHash_and_TextFile(Unscramble, Scramble);
         }
     }
 
     public static void readyMap() {
-        ni9logic.LOGGER.info("SCRAMBLE-GAME - Extracting data from scramble-data.txt into the hashmap...");
         // Path to our data
         Path path = Paths.get(PATHH);
 
@@ -72,23 +71,26 @@ public class Scramble {
                 // Inserting all the question and answers into the hash map for faster future get
                 UnscrambleScramble.put(Unscramble, Scramble);
             }
+            ni9logic.LOGGER.warn("[SCRAMBLE-GAME] » Extracted data from scramble-data.txt into the hashmap");
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void addUnscrambleScramble(String Unscramble, String Scramble) {
-        ni9logic.LOGGER.info("SCRAMBLE-GAME - Adding the question and the answer into the text file as well as into the hashmap");
+    public static void updateHash_and_TextFile(String Unscramble, String Scramble) {
         Path path = Paths.get(PATHH);
 
         // Appending the new question and answer to the file
         try {
+            ni9logic.LOGGER.warn("[SCRAMBLE-GAME] » Answer & Word added in the text file");
             Files.write(path, (Unscramble + ":" + Scramble + "\n").getBytes(), StandardOpenOption.APPEND);
             // Updating the map as well with the new question and answer
             UnscrambleScramble.put(Unscramble, Scramble);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        ni9logic.LOGGER.warn("[SCRAMBLE-GAME] » Answer added in the hashmap");
     }
 }

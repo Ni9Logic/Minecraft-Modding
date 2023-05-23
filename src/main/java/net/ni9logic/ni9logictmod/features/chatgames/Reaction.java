@@ -16,10 +16,10 @@ public class Reaction {
                 Pattern pattern = Pattern.compile("REACTION » First to type (\\w+) in the chat wins");
                 Matcher matcher = pattern.matcher(message);
                 if (matcher.find()) {
-                    ni9logic.LOGGER.info("REACTION-GAME - Found, moving towards input method...");
                     String word = matcher.group(1);
 
                     // Sends the words as soon as user presses p
+                    ni9logic.LOGGER.warn("[REACTION-GAME] » Word detected, calling sendAnswer.inputAnswer function");
                     sendAnswer.inputAnswer(word);
                 }
             }

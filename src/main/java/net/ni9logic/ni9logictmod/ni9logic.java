@@ -38,6 +38,11 @@ public class ni9logic implements ModInitializer {
                 AutoReply.playAutoReply(message.getString());
             });
 
+            if (message.getString().contains("You")) {
+                ni9logic.LOGGER.error(message.getString());
+                System.out.println(message.getString());
+            }
+
             return message; // Return the modified message
         });
 
@@ -48,6 +53,8 @@ public class ni9logic implements ModInitializer {
             executorService.submit(() -> {
                 Maths.playMath(message.getString());
                 Reaction.playReaction(message.getString());
+                Trivia.playTrivia(message.getString());
+                Scramble.playScramble(message.getString());
             });
         }));
         System.setProperty("java.awt.headless", "false");

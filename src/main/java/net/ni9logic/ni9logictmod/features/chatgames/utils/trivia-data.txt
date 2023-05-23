@@ -38,3 +38,5 @@ What ingredient is needed to make a potion of swiftness?:sugar
 How many timezones are there in the world?:24
 What are creepers petrified of?:cat
 What mob was a creeper originally supposed to be?:pig
+Which enchantment conflicts with Silk Touch?:fortune
+What is the third Zodiac signs?:geminis

@@ -28,13 +28,15 @@ public class Trivia {
                 Matcher matcher = pattern.matcher(message);
 
                 if (matcher.find()) {
-                    ni9logic.LOGGER.info("TRIVIA-GAME - Trivia Game Found heading towards input method...");
+                    ni9logic.LOGGER.warn("[TRIVIA-GAME] » Trivia detected, checking the trivia inside text file");
                     question = matcher.group(1);
                     if (questionAnswer.containsKey(question)) {
+                        ni9logic.LOGGER.warn("[TRIVIA-GAME] » Trivia found inside text file");
                         sendAnswer.inputAnswer(questionAnswer.get(question)); // Basically this is our answer to trivia if its present inside the hashmap
                     }
                 }
             } else if (message.contains("TRIVIA » The answer ")) {
+                ni9logic.LOGGER.warn("[TRIVIA-GAME] » Trivia not found inside text file, hence adding the trivia and the answer in text file");
                 addAnswer(message);
             }
         }
@@ -47,17 +49,14 @@ public class Trivia {
             Matcher matcher = answerPattern.matcher(message);
 
             if (matcher.find()) {
-                ni9logic.LOGGER.info("TRIVIA-GAME - Found answer for the trivia and the question was also not found in hashmap");
                 String answer = matcher.group(1);
                 // This updates the file and the hashmap as well for next
-                addQuestionAnswer(question, answer);
-                ni9logic.LOGGER.info("Added the answer in the hashmap");
+                updateHash_and_TextFile(question, answer);
             }
         }
     }
 
     public static void readyMap() {
-        ni9logic.LOGGER.info("TRIVIA-GAME - Extracting data from trivia-data.txt into the hashmap...");
         // Path to our data
         Path path = Paths.get(PATHH);
 
@@ -75,6 +74,8 @@ public class Trivia {
                 questionAnswer.put(question, answer);
             }
 
+            ni9logic.LOGGER.warn("[TRIVIA-GAME] » Extracted data from trivia-data.txt into the hashmap");
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -82,18 +83,20 @@ public class Trivia {
 
     }
 
-    public static void addQuestionAnswer(String question, String answer) {
-        ni9logic.LOGGER.info("TRIVIA-GAME - Adding the question and the answer into the text file as well as into the hashmap");
+    public static void updateHash_and_TextFile(String question, String answer) {
         Path path = Paths.get(PATHH);
 
         // Appending the new question and answer to the file
         try {
+            ni9logic.LOGGER.warn("[TRIVIA-GAME] » Trivia & Answer added in the text file");
             Files.write(path, (question + ":" + answer + "\n").getBytes(), StandardOpenOption.APPEND);
             // Updating the map as well with the new question and answer
             questionAnswer.put(question, answer);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        ni9logic.LOGGER.warn("[SCRAMBLE-GAME] » Answer added in the hashmap");
     }
 
 }

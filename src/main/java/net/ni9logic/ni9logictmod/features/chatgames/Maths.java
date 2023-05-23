@@ -21,10 +21,10 @@ public class Maths {
                 Pattern pattern = Pattern.compile("MATH » (.*) = \\?");
                 Matcher matcher = pattern.matcher(message);
                 if (matcher.find()) {
-                    ni9logic.LOGGER.info("MATH-GAME - Math game found in the cat... heading towards input method");
                     String mathAnswer = String.valueOf(getRes(matcher.group(1))); // This directly extracts our answer from the expression
 
                     // Sending Answer
+                    ni9logic.LOGGER.warn("[MATH-GAME] » Expression detected, calling sendAnswer.inputAnswer function");
                     sendAnswer.inputAnswer(mathAnswer);
                 }
             }

@@ -63,3 +63,5 @@ iekhncc:chicken
 rnipso:prison
 tprbasatele:breastplate
 psrwena:spawner
+qcceuigrhka:quickcharge
+ttumshlio:multishot
