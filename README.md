@@ -23,7 +23,7 @@ experience, enabling players to streamline their in-game tasks and focus on stra
 ## 3. Auto Clicker
 
 - Is able to enable/disable using a toggle button
-- Is able to spam left mouse button on random intervals making it easier for someone to detect it
+- Is able to spam left mouse button on random intervals making it harder for someone to detect it
 - Is able to stop if someone shuffles your inventory
 - Is able to wait before auto clicking again if your inventory is shuffled
 - Is able to attack on mobs and mobs only
