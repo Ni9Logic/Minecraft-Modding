@@ -3,6 +3,7 @@ package net.ni9logic.ni9logictmod;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
+import net.ni9logic.ni9logictmod.features.AutoReply;
 import net.ni9logic.ni9logictmod.features.chatgames.Maths;
 import net.ni9logic.ni9logictmod.features.chatgames.Reaction;
 import net.ni9logic.ni9logictmod.features.chatgames.Scramble;
@@ -34,6 +35,7 @@ public class ni9logic implements ModInitializer {
                 Trivia.playTrivia(message.getString());
                 Reaction.playReaction(message.getString());
                 Scramble.playScramble(message.getString());
+                AutoReply.playAutoReply(message.getString());
             });
 
             return message; // Return the modified message
