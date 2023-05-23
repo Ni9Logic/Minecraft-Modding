@@ -65,3 +65,5 @@ tprbasatele:breastplate
 psrwena:spawner
 qcceuigrhka:quickcharge
 ttumshlio:multishot
+avtners:servant
+ierhwt:wither

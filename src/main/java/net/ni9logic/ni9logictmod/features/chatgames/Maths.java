@@ -17,6 +17,9 @@ public class Maths {
         assert minecraft.player != null;
 
         if (chatGames) {
+            // Makes the sure that we are getting the message which has the expression and not the answer or winning statement
+            // Because they all have `MATH >>` in common
+
             if (message.contains("MATH » ") && !message.contains("MATH » The answer ") && !message.contains("won the game")) {
                 Pattern pattern = Pattern.compile("MATH » (.*) = \\?");
                 Matcher matcher = pattern.matcher(message);

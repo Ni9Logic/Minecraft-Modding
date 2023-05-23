@@ -53,7 +53,6 @@ public class OptionsScreen extends Screen {
 
         FeedBtn.setMessage(getAutoFeed(FeedOwnHunger.isAutoFeed));
 
-        this.buttonTooltips.put(this.addDrawableChild(FeedBtn), "Click to auto feed your player when hunger is low");
 
         int Fix_X = this.width / 2 - 65, Fix_Y = this.height / 2;
 
@@ -68,7 +67,6 @@ public class OptionsScreen extends Screen {
 
         FixBtn.setMessage(getAutoFix(FixHandItem.isFixHandItem));
 
-        this.buttonTooltips.put(this.addDrawableChild(FixBtn), "Click to auto fix your player item in hand");
     }
 
     private Text getChatGameBtnStatus(boolean isActive) {
