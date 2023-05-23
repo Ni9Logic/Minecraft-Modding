@@ -28,11 +28,32 @@ experience, enabling players to streamline their in-game tasks and focus on stra
 - Is able to wait before auto clicking again if your inventory is shuffled
 - Is able to attack on mobs and mobs only
 
-## 4. Rotation Detector (In Progress)
+## 4. Rotation Detector
 
 - Is able to detect if someone decided to change your yaw (pov) or degree of angle at your screen.
+- Is able to exit game on detection
 
-## 5. Chat Games (In Progres)
+## 5. Chat Games
+
+### 1. One Button Toggle
+
+- Is able to toggle chat games on/off with a single button.
+
+### 2. Reaction Game
+
+- Is able to write the word before anyone else in the chat.
+
+### 3. Math Game
+
+- Is able to solve whole math equations before anyone else in the chat.
+
+### 4. Scramble Game
+
+- Is able to unscrable any word before anyone else in the chat.
+
+### 5. Trivia
+
+- Is able to solve trivial questions before anyone else in the chat.
 
 ## Installation & Usage
 
@@ -56,3 +77,8 @@ simultaneously sending an in-game message.
 The software incorporates a convenient item locking capability, which can be toggled using the 'B' key. When activated,
 this feature ensures that the item held in the player's main hand remains fixed, preventing accidental item swaps or
 unwanted changes during gameplay.
+
+### 4. Answering chat Games:
+
+The software automatically detects that a chat game has appeared in the chat and thus person just has to press the key '
+I' in order to respond to chatgames.
