@@ -43,7 +43,7 @@ public class ni9logic implements ModInitializer {
                 Scramble.playScramble(message.getString());
             });
 
-            return message; // Return the modified message
+            return message;
         });
 
         // This is for local chat Games -> Single player
