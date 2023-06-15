@@ -28,6 +28,7 @@ public class AutoClicker {
             Entity entity = ((EntityHitResult) rayTrace).getEntity();
             if (entity instanceof LivingEntity && !(entity instanceof PlayerEntity)) {
                 try {
+                    // Some logic needed to be implemented here
                     if (LockItemInHand.getItemNameInMainHand().contains("Space L")) {
                         Robot robot = new Robot();
                         Random random = new Random();

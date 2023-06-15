@@ -58,6 +58,8 @@ public class ni9logic implements ModInitializer {
                 Scramble.playScramble(message.getString());
             });
         }));
+
+        // Okay I don't remember why I put this at the end
         System.setProperty("java.awt.headless", "false");
     }
 }

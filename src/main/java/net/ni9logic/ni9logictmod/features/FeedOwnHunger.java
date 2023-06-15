@@ -13,7 +13,9 @@ public class FeedOwnHunger {
                 if (myFoodLevel <= 8) {
                     minecraft.player.networkHandler.sendChatCommand("feed");
 
-                    // Give a gap because it will spam otherwise
+                    /* I just got to know that we kinda use some kind of async function and await thing to wait for the
+                    Give a gap because it will spam otherwise
+                     to respond */
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
