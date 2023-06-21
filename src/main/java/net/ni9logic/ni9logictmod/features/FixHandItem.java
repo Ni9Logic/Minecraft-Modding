@@ -11,6 +11,7 @@ public class FixHandItem {
         MinecraftClient minecraft = MinecraftClient.getInstance();
         assert minecraft.player != null;
         ItemStack heldItem = minecraft.player.getStackInHand(Hand.MAIN_HAND);
+
         // Perform operations with the held item as needed
         if (isFixHandItem && heldItem.isDamageable()) {
             int itemHealth = getItemHealth(heldItem);
@@ -18,6 +19,8 @@ public class FixHandItem {
                 minecraft.player.networkHandler.sendChatCommand("fix");
 
                 // Give a gap because it will spam otherwise
+                // We can try to find a way where we can use await function until server responds.
+
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
